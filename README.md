@@ -1,6 +1,6 @@
 # Leffell High Altitude Balloon Main Arduino Code
 
-This Arduino project is designed to collect and transmit weather data from a weather balloon. It includes sensors for temperature, humidity, pressure, and GPS to track the balloon's location.
+This project is currently in the process of being assembled. Other code from other components can be found eleswhere in the [Leffell-Space](https://github.com/orgs/Leffell-Space/repositories) organization and we are in the process of adding code from those separate repositories to this one. This is will be the final code that gets launched.
 
 ## Features
 
@@ -10,29 +10,23 @@ This Arduino project is designed to collect and transmit weather data from a wea
 
 ## Components
 
-- Arduino board
-- Temperature sensor
-- Humidity sensor
-- Pressure sensor
-- GPS module
-- Wireless transmitter
-- Power supply (battery)
+- Arduino Uno
+- Temperature sensor [Add name]
+- Humidity sensor [Add name]
+- Pressure sensor [Add name]
+- GY-GPS6MV2 GPS module
+- Wireless transmitter [Add more info]
+- Power supply (battery) [Add more info]
 
 ## Installation
 
-1. Clone this repository.
+1. Clone this repository:
    ```bash
    git clone https://github.com/Leffell-Space/Arduino_Main_Weather_Balloon.git
    ```
-2. Open the project in the Arduino IDE.
-3. Install the necessary libraries (if any).
-4. Upload the code to your Arduino board.
-
-## Usage
-
-1. Power on the Arduino and sensors.
-2. Launch the weather balloon.
-3. Monitor the data transmitted to the ground station.
+2. Open the project in the Arduino IDE
+3. Install the necessary libraries (if any)
+4. Upload the code to your Arduino board
 
 ## Leffell Space Program Members
 
@@ -42,3 +36,6 @@ This Arduino project is designed to collect and transmit weather data from a wea
 - Ari Messinger (S)
 - Oren Podietz (S)
 - Raz Idan (Instructor)
+## [Add license and link to license]
+
+## [Add finished project documentation]
