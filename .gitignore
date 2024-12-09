@@ -30,3 +30,6 @@
 *.exe
 *.out
 *.app
+
+arduino.json
+c_cpp_properties.json
