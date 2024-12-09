@@ -21,8 +21,7 @@ jobs:
             artifact-name-suffix: arduino-avr-uno
             
     steps:
-      - name: Check out main branch
-        run: git checkout --recurse-submodules -- main
+      - run: actions/checkout@v4.2.2
 
       - uses: arduino/compile-sketches@v1
         with:
