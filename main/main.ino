@@ -62,7 +62,7 @@ void loop() {
 
   sensors_in.requestTemperatures();
   Serial.print("Inside Celsius temperature: ");
-  float insideCelsius = sensors_in.getTempCByIndex(0)
+  float insideCelsius = sensors_in.getTempCByIndex(0);
   delay(10);
   sensors_out.requestTemperatures();
   float outsideCelisus = sensors_out.getTempCByIndex(0);
