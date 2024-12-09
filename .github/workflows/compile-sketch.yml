@@ -29,3 +29,6 @@ jobs:
             - name: DHT22
             - name: OneWire
             - name: DallasTemperature
+            with:
+          enable-deltas-report: true
+      - uses: arduino/report-size-deltas@v1
