@@ -11,15 +11,7 @@ env:
 jobs:
   compile:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        board:
-          # Each element in the sequence produces a matrix job:
-          - fqbn: arduino:avr:uno
-            # This suffix will be used to define a unique name for the sketches report artifact.
-            artifact-name-suffix: arduino-avr-uno
-            
+         
     steps:
       - uses: actions/checkout@v4.2.2
 
@@ -32,7 +24,6 @@ jobs:
             - name: DHT22
             - name: OneWire
             - name: DallasTemperature
-          fqbn: ${{ matrix.board.fqbn }}
           enable-deltas-report: true
           sketches-report-path: ${{ env.SKETCHES_REPORTS_PATH }}
 
