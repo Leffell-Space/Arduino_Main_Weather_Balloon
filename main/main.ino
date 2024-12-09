@@ -55,13 +55,7 @@ void loop() {
   float t = dht22.convertCtoF(dht22.getTemperature());
   float h = dht22.getHumidity();
 
-  if (dht22.getLastError() != dht22.OK) {
-    Serial.print("last error :");
-    Serial.println(dht22.getLastError());
-  }
-
   sensors_in.requestTemperatures();
-  Serial.print("Inside Celsius temperature: ");
   float insideCelsius = sensors_in.getTempCByIndex(0);
   delay(10);
   sensors_out.requestTemperatures();
