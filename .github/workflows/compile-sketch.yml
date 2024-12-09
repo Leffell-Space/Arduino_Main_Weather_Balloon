@@ -25,4 +25,8 @@ jobs:
             - ./
           libraries: |
             # The "blink" sketch being compiled in this demo doesn't use any libraries, so just use an empty list
-            -
+            - SD
+            - SPI
+            - DHT22
+            - OneWire
+            - DallasTemperature
