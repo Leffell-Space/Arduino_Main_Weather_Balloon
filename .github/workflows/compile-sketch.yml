@@ -31,7 +31,7 @@ jobs:
       - name: Upload sketches report to workflow artifact
         uses: actions/upload-artifact@v4
         with:
-          name: sketches-reports-${{ matrix.board.artifact-name-suffix }}
+          name: sketches-reports
           path: ${{ env.SKETCHES_REPORTS_PATH }}
 
   # When using a matrix to compile for multiple boards, it's necessary to use a separate job for the deltas report
