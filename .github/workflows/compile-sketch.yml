@@ -26,7 +26,7 @@ jobs:
       - uses: arduino/compile-sketches@v1
         with:
           sketch-paths: |
-            - main/mainArduinoCode
+            - main/mainArduinoCode.ino
           libraries: |
             - name: SD
             - name: DHT22
