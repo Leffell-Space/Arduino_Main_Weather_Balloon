@@ -11,12 +11,14 @@ This project is currently in the process of being assembled. Other code from oth
 ## Components
 
 - Arduino Uno
-- Temperature sensor [Add name]
+- Internal temperature sensor (Green Tab) [Add name]
+- External temperature Sensor [Add name]
 - Humidity sensor [Add name]
 - Pressure sensor [Add name]
 - GY-GPS6MV2 GPS module
 - Wireless transmitter [Add more info]
 - Power supply (battery) [Add more info]
+- [Add other components]
 
 ## Installation
 
