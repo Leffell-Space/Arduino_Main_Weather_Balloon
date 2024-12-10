@@ -35,5 +35,5 @@ jobs:
       - uses: arduino/report-size-deltas@v1
         with:
           sketches-reports-source: sketches-reports
-          github-token: ${{ env.SPACE_API_KEY_GITHUB_PR }}
+          github-token: ${{ secrets.SPACE_API_KEY_GITHUB_PR }}
           
