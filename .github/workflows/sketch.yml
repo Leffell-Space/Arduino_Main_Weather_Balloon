@@ -16,8 +16,10 @@ jobs:
       - name: Compile sketches
         uses: arduino/compile-sketches@v1
         with:
-          fqbn: arduino:mbed:nano33ble
           sketch-paths: |
             - ./
           libraries: |
-            - name: SPI
+            - name: SD
+            - name: DHT22
+            - name: OneWire
+            - name: DallasTemperature
