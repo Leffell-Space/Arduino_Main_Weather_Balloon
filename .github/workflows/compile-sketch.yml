@@ -28,11 +28,13 @@ jobs:
       # This step is needed to pass the size data to the report job.
       - name: Upload sketches report to workflow artifact
         uses: actions/upload-artifact@v4
+        if: github.event_name == 'pull_request'
         with:
           name: sketches-reports
           path: sketches-reports
 
       - uses: arduino/report-size-deltas@v1
+        if: github.event_name == 'pull_request'
         with:
           sketches-reports-source: sketches-reports
           github-token: ${{ secrets.SPACE_API_KEY_GITHUB_PR }}
