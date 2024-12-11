@@ -32,11 +32,11 @@ This project is currently in the process of being assembled. Other code from oth
 
 ## Leffell Space Program Members
 
-- Ari Bellman (S)
-- Daniel Lerner (S)
-- Spencer Kolodny (J)
-- Ari Messinger (S)
-- Oren Podietz (S)
+- Ari Bellman (SO)
+- Daniel Lerner (SO)
+- Spencer Kolodny (JR)
+- Ari Messinger (SO)
+- Oren Podietz (SO)
 - Raz Idan (Instructor)
 ## [Add license and link to license]
 
