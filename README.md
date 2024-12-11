@@ -31,13 +31,13 @@ This project is currently in the process of being assembled. Other code from oth
 4. Upload the code to your Arduino board
 
 ## Leffell Space Program Members
-
-- Ari Bellman (S)
-- Daniel Lerner (S)
-- Spencer Kolodny (J)
-- Ari Messinger (S)
-- Oren Podietz (S)
 - Raz Idan (Instructor)
+- Spencer Kolodny (JR)
+- Ari Bellman (SO)
+- Daniel Lerner (SO)
+- Ari Messinger (SO)
+- Oren Podietz (SO)
+  
 ## [Add license and link to license]
 
 ## [Add finished project documentation]
