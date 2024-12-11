@@ -45,9 +45,9 @@ void setup() {
   }
   
   // Create/Open file 
-  myFile = SD.open("test.txt", FILE_WRITE);
+  myFile = SD.open("data.csv", FILE_WRITE);
   
-  myFile.print("Date | Time | Humidity | Temperature | Inside Temperature | Outside Temperature");
+  myFile.print("Date,Time,Humidity,Temperature,Inside Temperature,Outside Temperature");
   myFile.flush();
 }
 
@@ -66,11 +66,11 @@ void loop() {
     // Write to file
     myFile.println();
     myFile.print(h, 1);
-    myFile.print(" | ");
+    myFile.print(",");
     myFile.print(t, 1);
-    myFile.print(" | ");
+    myFile.print(",");
     myFile.print(insideCelsius);
-    myFile.print(" | ");
+    myFile.print(",");
     myFile.print(outsideCelisus);
     myFile.flush();                                               
   } else { // if the file didn't open, print an error:
