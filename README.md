@@ -11,8 +11,8 @@ This project is currently in the process of being assembled. Other code from oth
 ## Components
 
 - Arduino Uno
-- Internal temperature sensor (Green Tab) [Add name]
-- External temperature Sensor [Add name]
+- DS18B20 internal temperature sensor (Green Tape)
+- DS18B20 external temperature sensor
 - Humidity sensor [Add name]
 - Pressure sensor [Add name]
 - GY-GPS6MV2 GPS module
