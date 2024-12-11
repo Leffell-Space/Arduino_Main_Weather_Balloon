@@ -74,7 +74,7 @@ void loop() {
     myFile.print(outsideCelisus);
     myFile.flush();                                               
   } else { // if the file didn't open, print an error:
-    Serial.println("error opening test.txt");
+    Serial.println("error opening data.csv");
   }
 
   delay(2000); //Collecting period should be : >1.7 second
