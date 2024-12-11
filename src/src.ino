@@ -23,6 +23,8 @@ File myFile;
 
 int pinCS = 10; 
 
+String dataFile = "data.csv";
+
 void setup() {
     
   Serial.begin(9600);
@@ -40,14 +42,14 @@ void setup() {
     return;
   }
 
-  if(SD.exists("test.txt")) {
-    SD.remove("test.txt");
+  if(SD.exists(dataFile)) {
+    SD.remove(dataFile);
   }
   
   // Create/Open file 
-  myFile = SD.open("test.txt", FILE_WRITE);
+  myFile = SD.open(dataFile, FILE_WRITE);
   
-  myFile.print("Date | Time | Humidity | Temperature | Inside Temperature | Outside Temperature");
+  myFile.print("Date,Time,Humidity,Temperature,Inside Temperature,Outside Temperature");
   myFile.flush();
 }
 
@@ -66,15 +68,15 @@ void loop() {
     // Write to file
     myFile.println();
     myFile.print(h, 1);
-    myFile.print(" | ");
+    myFile.print(",");
     myFile.print(t, 1);
-    myFile.print(" | ");
+    myFile.print(",");
     myFile.print(insideCelsius);
-    myFile.print(" | ");
+    myFile.print(",");
     myFile.print(outsideCelisus);
     myFile.flush();                                               
   } else { // if the file didn't open, print an error:
-    Serial.println("error opening test.txt");
+    Serial.println("error opening " + dataFile);
   }
 
   delay(2000); //Collecting period should be : >1.7 second
