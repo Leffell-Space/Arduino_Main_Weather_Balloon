@@ -62,6 +62,16 @@ void setup() {
 }
 
 void loop() {
+  double latitude;
+  double longitude;
+  double altitude;
+  int satelliteCount;
+  unsigned long timestamp;
+  int hours;
+  int minutes;
+  int seconds;
+  float hdop;
+
   if (ss.available() > 0) {
     gps.encode(ss.read()); // Feed data to the GPS library
    if (gps.location.isUpdated()) {
