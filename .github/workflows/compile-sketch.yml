@@ -23,6 +23,8 @@ jobs:
             - name: DHT22
             - name: OneWire
             - name: DallasTemperature
+            - name: TinyGPS++
+            - name: SoftwareSerial
           enable-deltas-report: true
 
       # This step is needed to pass the size data to the report job.
