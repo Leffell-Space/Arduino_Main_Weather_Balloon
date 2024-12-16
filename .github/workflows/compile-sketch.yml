@@ -23,7 +23,7 @@ jobs:
             - name: DHT22
             - name: OneWire
             - name: DallasTemperature
-            - name: TinyGPS++
+            - name: TinyGPSPlusPlus
             - name: SoftwareSerial
           enable-deltas-report: true
 
