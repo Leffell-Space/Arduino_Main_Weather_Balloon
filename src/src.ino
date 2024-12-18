@@ -11,7 +11,7 @@ TinyGPSPlus gps;
 SoftwareSerial ss(4, 3); // RX, TX pins (adjust as needed)
 
 // Data wire is conncted to the Arduino digital pin 4
-#define INSIDE 4
+#define INSIDE 5
 #define OUTSIDE 6
 #define pinDATA 7 // SDA, or almost any other I/O pin
 
