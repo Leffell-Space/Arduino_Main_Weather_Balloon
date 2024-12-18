@@ -16,7 +16,7 @@ This project is currently in the process of being assembled. Other code from oth
 - Arduino Uno
 - DS18B20 internal temperature sensor (Green Tape)
 - DS18B20 external temperature sensor
-- MS5607-02BA03 Barometric Pressure sensor
+- MS5611-01BA03 Barometric Pressure sensor
 - GY-GPS6MV2 GPS module
 - Wireless transmitter [Add more info]
 - Power supply (EXCEED-RC 1800 mAh battery)
