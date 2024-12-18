@@ -12,7 +12,7 @@ This project is currently in the process of being assembled. Other code from oth
 
 - 200g Weather Balloon
 - 4-5ft Parachute (TBD at a later time)
-- _______ Styrofoam Box (Stores Components)
+- 15in x 13in x 10in Styrofoam Box (Stores Components)
 - Arduino Uno
 - DS18B20 internal temperature sensor (Green Tape)
 - DS18B20 external temperature sensor
@@ -22,7 +22,9 @@ This project is currently in the process of being assembled. Other code from oth
 - Power supply (EXCEED-RC 1800 mAh battery)
 - Apple Airtag (Part of GPS System)
 - AKASO EK7000 4K Camera (x2)
-- 
+- I2C Ozone Sensor
+- MG-811 Analog CO2 Gas Sensor
+- PM2.5 Air Quality Sensor (Particulate Sensor)
 - [Add other components]
 
 ## Installation
