@@ -3,37 +3,45 @@
 #include <DHT22.h>
 #include <OneWire.h>
 #include <DallasTemperature.h>
+#include <TinyGPS++.h>  // test
+#include <SoftwareSerial.h>
+
+TinyGPSPlus gps;
+
+SoftwareSerial ss(4, 3);  // RX, TX pins (adjust as needed)
 
 // Data wire is conncted to the Arduino digital pin 4
-#define INSIDE 4
+#define INSIDE 5
 #define OUTSIDE 6
-#define pinDATA 7 // SDA, or almost any other I/O pin
+#define pinDATA 7  // SDA, or almost any other I/O pin
 
 // Setup a oneWire instance to communicate with any OneWire devices
 OneWire in(INSIDE);
 OneWire out(OUTSIDE);
 
-// Pass our oneWire reference to Dallas Temperature sensor 
+// Pass our oneWire reference to Dallas Temperature sensor
 DallasTemperature sensors_in(&in);
 DallasTemperature sensors_out(&out);
 
-DHT22 dht22(pinDATA); 
- 
+DHT22 dht22(pinDATA);
+
 File myFile;
 
-int pinCS = 10; 
+int pinCS = 10;
 
 String dataFile = "data.csv";
 
 void setup() {
-    
+
   Serial.begin(9600);
+  ss.begin(9600);  // GPS baud rate
+
   pinMode(pinCS, OUTPUT);
 
   // Start up the library
   sensors_in.begin();
   sensors_out.begin();
-  
+
   // SD Card Initialization
   if (SD.begin()) {
     Serial.println("SD card is ready to use.");
@@ -42,42 +50,88 @@ void setup() {
     return;
   }
 
-  if(SD.exists(dataFile)) {
+  if (SD.exists(dataFile)) {
     SD.remove(dataFile);
   }
-  
-  // Create/Open file 
+
+  // Create/Open file
   myFile = SD.open(dataFile, FILE_WRITE);
-  
-  myFile.print("Date,Time,Humidity,Temperature,Inside Temperature,Outside Temperature");
+
+  myFile.println("Time,Latitude,Longitude,Altitude,Satellite Count,HDOP,Humidity,Temperature,Inside Temperature,Outside Temperature");
   myFile.flush();
 }
 
 void loop() {
-  float t = dht22.convertCtoF(dht22.getTemperature());
-  float h = dht22.getHumidity();
+  double latitude;
+  double longitude;
+  double altitude;
+  int satelliteCount;
+  unsigned long timestamp;
+  int hours;
+  int minutes;
+  int seconds;
+  float hdop;
 
-  sensors_in.requestTemperatures();
-  float insideCelsius = sensors_in.getTempCByIndex(0);
-  delay(10);
-  sensors_out.requestTemperatures();
-  float outsideCelisus = sensors_out.getTempCByIndex(0);
+  while (ss.available() > 0) {
+    gps.encode(ss.read());  // Feed data to the GPS library
+    if (gps.location.isUpdated()) {
+      // Get location information
+      latitude = gps.location.lat();
+      Serial.println(latitude);
+      longitude = gps.location.lng();
+      altitude = gps.altitude.meters();  // Altitude in meters
 
-    // if the file opened okay, write to it:
-  if (myFile) {
-    // Write to file
-    myFile.println();
-    myFile.print(h, 1);
-    myFile.print(",");
-    myFile.print(t, 1);
-    myFile.print(",");
-    myFile.print(insideCelsius);
-    myFile.print(",");
-    myFile.print(outsideCelisus);
-    myFile.flush();                                               
-  } else { // if the file didn't open, print an error:
-    Serial.println("error opening " + dataFile);
+      // Get the number of satellites in view
+      satelliteCount = gps.satellites.value();
+
+      // Get the timestamp (in hours, minutes, seconds)
+      timestamp = gps.time.value();
+      hours = gps.time.hour();
+      minutes = gps.time.minute();
+      seconds = gps.time.second();
+
+      // Get the Horizontal Dilution of Precision (HDOP)
+      hdop = gps.hdop.value() / 100.0;  // HDOP is returned in hundredths, so divide by 100
+
+      float t = dht22.convertCtoF(dht22.getTemperature());
+      float h = dht22.getHumidity();
+
+      sensors_in.requestTemperatures();
+      float insideCelsius = sensors_in.getTempCByIndex(0);
+      sensors_out.requestTemperatures();
+      float outsideCelisus = sensors_out.getTempCByIndex(0);
+
+      // if the file opened okay, write to it:
+      if (myFile) {
+        // Write to file
+        myFile.print(hours);
+        myFile.print(":");
+        myFile.print(minutes);
+        myFile.print(":");
+        myFile.print(seconds);
+        myFile.print(",");
+        myFile.print(latitude, 6);
+        myFile.print(",");
+        myFile.print(longitude, 6);
+        myFile.print(",");
+        myFile.print(altitude, 3);
+        myFile.print(",");
+        myFile.print(satelliteCount);
+        myFile.print(",");
+        myFile.print(hdop, 2);
+        myFile.print(",");
+        myFile.print(h, 1);
+        myFile.print(",");
+        myFile.print(t, 1);
+        myFile.print(",");
+        myFile.print(insideCelsius);
+        myFile.print(",");
+        myFile.print(outsideCelisus);
+        myFile.println();
+        myFile.flush();
+      } else {  // if the file didn't open, print an error:
+        Serial.println("error opening " + dataFile);
+      }
+    }
   }
-
-  delay(2000); //Collecting period should be : >1.7 second
 }
