@@ -1,6 +1,5 @@
 #include <SD.h>
 #include <SPI.h>
-#include <DHT22.h>
 #include <OneWire.h>
 #include <DallasTemperature.h>
 #include <TinyGPS++.h>  // test
@@ -13,7 +12,6 @@ SoftwareSerial ss(4, 3);  // RX, TX pins (adjust as needed)
 // Data wire is conncted to the Arduino digital pin 4
 #define INSIDE 5
 #define OUTSIDE 6
-#define pinDATA 7  // SDA, or almost any other I/O pin
 
 // Setup a oneWire instance to communicate with any OneWire devices
 OneWire in(INSIDE);
@@ -22,8 +20,6 @@ OneWire out(OUTSIDE);
 // Pass our oneWire reference to Dallas Temperature sensor
 DallasTemperature sensors_in(&in);
 DallasTemperature sensors_out(&out);
-
-DHT22 dht22(pinDATA);
 
 File myFile;
 
@@ -93,9 +89,6 @@ void loop() {
       // Get the Horizontal Dilution of Precision (HDOP)
       hdop = gps.hdop.value() / 100.0;  // HDOP is returned in hundredths, so divide by 100
 
-      float t = dht22.convertCtoF(dht22.getTemperature());
-      float h = dht22.getHumidity();
-
       sensors_in.requestTemperatures();
       float insideCelsius = sensors_in.getTempCByIndex(0);
       sensors_out.requestTemperatures();
@@ -119,10 +112,6 @@ void loop() {
         myFile.print(satelliteCount);
         myFile.print(",");
         myFile.print(hdop, 2);
-        myFile.print(",");
-        myFile.print(h, 1);
-        myFile.print(",");
-        myFile.print(t, 1);
         myFile.print(",");
         myFile.print(insideCelsius);
         myFile.print(",");
