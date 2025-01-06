@@ -20,7 +20,7 @@ This project is currently in the process of being assembled. Other code from oth
 - GY-GPS6MV2 GPS module
 - Wireless transmitter [Add more info]
 - Power supply (EXCEED-RC 1800 mAh battery)
-- Apple Airtag (Part of GPS System)
+- Apple Airtag 
 - AKASO EK7000 4K Camera (x2)
 - I2C Ozone Sensor
 - MG-811 Analog CO2 Gas Sensor
