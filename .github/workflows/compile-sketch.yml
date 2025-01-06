@@ -20,7 +20,6 @@ jobs:
             - ./
           libraries: |
             - name: SD
-            - name: DHT22
             - name: OneWire
             - name: DallasTemperature
             - name: TinyGPSPlus
