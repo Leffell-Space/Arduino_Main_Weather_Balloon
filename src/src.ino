@@ -9,7 +9,6 @@ TinyGPSPlus gps;
 
 SoftwareSerial ss(4, 3);  // RX, TX pins (adjust as needed)
 
-// Data wire is conncted to the Arduino digital pin 4
 #define INSIDE 5
 #define OUTSIDE 6
 
@@ -53,7 +52,7 @@ void setup() {
   // Create/Open file
   myFile = SD.open(dataFile, FILE_WRITE);
 
-  myFile.println("Time,Latitude,Longitude,Altitude,Satellite Count,HDOP,Humidity,Temperature,Inside Temperature,Outside Temperature");
+  myFile.println("Time,Latitude,Longitude,Altitude,Satellite Count,HDOP,Inside Temperature,Outside Temperature");
   myFile.flush();
 }
 
@@ -70,13 +69,12 @@ void loop() {
 
   while (ss.available() > 0) {
     gps.encode(ss.read());  // Feed data to the GPS library
-    if (gps.location.isUpdated()) {
+    if (gps.location.isUpdated() && gps.satellites.isUpdated()) {
       // Get location information
       latitude = gps.location.lat();
-      Serial.println(latitude);
       longitude = gps.location.lng();
       altitude = gps.altitude.meters();  // Altitude in meters
-
+  
       // Get the number of satellites in view
       satelliteCount = gps.satellites.value();
 
@@ -92,7 +90,7 @@ void loop() {
       sensors_in.requestTemperatures();
       float insideCelsius = sensors_in.getTempCByIndex(0);
       sensors_out.requestTemperatures();
-      float outsideCelisus = sensors_out.getTempCByIndex(0);
+      float outsideCelsius = sensors_out.getTempCByIndex(0);
 
       // if the file opened okay, write to it:
       if (myFile) {
@@ -115,7 +113,7 @@ void loop() {
         myFile.print(",");
         myFile.print(insideCelsius);
         myFile.print(",");
-        myFile.print(outsideCelisus);
+        myFile.print(outsideCelsius);
         myFile.println();
         myFile.flush();
       } else {  // if the file didn't open, print an error:
