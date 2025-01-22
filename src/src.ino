@@ -61,7 +61,6 @@ void loop() {
   double longitude;
   double altitude;
   int satelliteCount;
-  unsigned long timestamp;
   int hours;
   int minutes;
   int seconds;
@@ -79,7 +78,6 @@ void loop() {
       satelliteCount = gps.satellites.value();
 
       // Get the timestamp (in hours, minutes, seconds)
-      timestamp = gps.time.value();
       hours = gps.time.hour();
       minutes = gps.time.minute();
       seconds = gps.time.second();
