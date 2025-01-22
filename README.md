@@ -11,11 +11,11 @@ This project is currently in the process of being assembled. Other code from oth
 ## Components
 
 - 200g Weather Balloon
-- 4-5ft Parachute (TBD at a later time)
+- 53-inch Parachute (TBD at a later time)
 - 15in x 13in x 10in Styrofoam Box (Stores Components)
-- Arduino Uno
-- DS18B20 internal temperature sensor (Green Tape)
-- DS18B20 external temperature sensor
+- Arduino Uno (x2)
+- DS18B20 internal temperature sensor attached to pin 5 (Green Tape)
+- DS18B20 external temperature sensor attached to pin 6
 - MS5611-01BA03 Barometric Pressure sensor
 - GY-GPS6MV2 GPS module
 - Wireless transmitter [Add more info]
