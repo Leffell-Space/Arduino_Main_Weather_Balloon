@@ -15,6 +15,14 @@ This project is currently in the process of being assembled. Other code from oth
 - 15in x 13in x 10in Styrofoam Box (Stores Components)
 - Master Arduino Uno
 - Slave Arduino Uno
+  
+
+| Sensor | Port/Arduino  | Weight | Power Draw |           
+| -  | - | - | - |
+|January| $250    | 500| |
+| February | $80     | 300 | |
+| March    | $420    | 200| |
+
 - DS18B20 internal temperature sensor attached to pin 5 (Green Tape)
 - DS18B20 external temperature sensor attached to pin 6
 - MS5611-01BA03 Barometric Pressure sensor
