@@ -27,11 +27,10 @@ This project is currently in the process of being assembled. Other code from oth
 |MG-811 Analog CO2 Gas Sensor| A0 / Slave Arduino|6| |
 |EXCEED-RC 1800 mAh battery| Master and Slave Arduino|273| |
 |AKASO EK7000 4K Camera (x2)| N/A|288| |
-
+|Apple Airtag | N/A|11| |
 
 
 - Wireless transmitter [Add more info]
-- Apple Airtag 
 - [Add other components]
 
 ## Installation
