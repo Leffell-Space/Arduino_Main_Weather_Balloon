@@ -11,20 +11,26 @@ This project is currently in the process of being assembled. Other code from oth
 ## Components
 
 - 200g Weather Balloon
-- 4-5ft Parachute (TBD at a later time)
+- 53-inch Parachute (TBD at a later time)
 - 15in x 13in x 10in Styrofoam Box (Stores Components)
-- Arduino Uno
-- DS18B20 internal temperature sensor (Green Tape)
-- DS18B20 external temperature sensor
-- MS5611-01BA03 Barometric Pressure sensor
-- GY-GPS6MV2 GPS module
+- Master Arduino Uno
+- Slave Arduino Uno
+  
+
+| Device | Pin(s)/Arduino  | Mass(g) | Power Draw |           
+| - | - | - | - |
+|DS18B20 Internal Temperature Sensor (Green Tape)| 5 / Master Arduino| 9.1| |
+|DS18B20 External Temperature Sensor | 6 / Master Arduino| 9.1 | |
+|MS5611-01BA03 Barometric Pressure Sensor| A4,A5 / Slave Arduino|2| |
+|GY-GPS6MV2 GPS Module| 3,4 / Master Arduino|74| |
+|I2C Ozone Sensor| A4,A5 / Slave Arduino|5| |
+|MG-811 Analog CO2 Gas Sensor| A0 / Slave Arduino|6| |
+|EXCEED-RC 1800 mAh battery| Master and Slave Arduino|273| |
+|AKASO EK7000 4K Camera (x2)| N/A|288| |
+|Apple Airtag | N/A|11| |
+
+
 - Wireless transmitter [Add more info]
-- Power supply (EXCEED-RC 1800 mAh battery)
-- Apple Airtag 
-- AKASO EK7000 4K Camera (x2)
-- I2C Ozone Sensor
-- MG-811 Analog CO2 Gas Sensor
-- PM2.5 Air Quality Sensor (Particulate Sensor)
 - [Add other components]
 
 ## Installation
