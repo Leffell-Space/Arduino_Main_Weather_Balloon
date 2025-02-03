@@ -19,15 +19,15 @@ This project is currently in the process of being assembled. Other code from oth
 
 | Device | Pin(s)/Arduino  | Mass(g) | Power Draw |           
 | - | - | - | - |
-|DS18B20 Internal Temperature Sensor (Green Tape)| 5 / Master Arduino| 9.1| |
-|DS18B20 External Temperature Sensor | 6 / Master Arduino| 9.1 | |
-|MS5611-01BA03 Barometric Pressure Sensor| A4,A5 / Slave Arduino|2| |
-|GY-GPS6MV2 GPS Module| 3,4 / Master Arduino|74| |
-|I2C Ozone Sensor| A4,A5 / Slave Arduino|5| |
-|MG-811 Analog CO2 Gas Sensor| A0 / Slave Arduino|6| |
+|DS18B20 Internal Temperature Sensor (Green Tape)| 5 / Master Arduino| 9.1|N/A|
+|DS18B20 External Temperature Sensor | 6 / Master Arduino| 9.1 |N/A|
+|MS5611-01BA03 Barometric Pressure Sensor| A4,A5 / Slave Arduino|2| N/A|
+|GY-GPS6MV2 GPS Module| 3,4 / Master Arduino|74|N/A|
+|I2C Ozone Sensor| A4,A5 / Slave Arduino|5| N/A |
+|MG-811 Analog CO2 Gas Sensor| A0 / Slave Arduino|6|N/A|
 |EXCEED-RC 1800 mAh battery| Master and Slave Arduino|273| |
-|AKASO EK7000 4K Camera (x2)| N/A|288| |
-|Apple Airtag | N/A|11| |
+|AKASO EK7000 4K Camera (x2)| N/A|288|N/A|
+|Apple Airtag | N/A|11|N/A|
 
 
 - Wireless transmitter [Add more info]
