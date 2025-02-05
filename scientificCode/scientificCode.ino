@@ -44,6 +44,8 @@ void loop() {
 
   // Send pressure via serial (UART);
   Serial.print("Pressure: " + String(filtered) + " | ");
-  Serial.println("Air Quality: " + String(PPM_acetone));
+  Serial.print("Air Quality: " + String(PPM_acetone) + " | ");
+  Serial.println("Volts: " + String(volts));
+
   delay(1);
 }
