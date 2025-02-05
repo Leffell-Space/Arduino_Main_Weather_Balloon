@@ -1,4 +1,5 @@
 #include <MS5611.h>
+#include "DFRobot_OzoneSensor.h"
 
 MS5611 baro;
 int32_t pressure;
