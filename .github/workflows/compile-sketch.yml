@@ -25,6 +25,7 @@ jobs:
             - name: DallasTemperature
             - name: TinyGPSPlus
             - source-url: https://github.com/gronat/MS5611.git
+            - source-url: https://github.com/DFRobot/DFRobot_OzoneSensor.git
           enable-deltas-report: true
 
       # This step is needed to pass the size data to the report job.
