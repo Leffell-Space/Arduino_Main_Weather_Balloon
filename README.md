@@ -14,7 +14,7 @@ This project is currently in the process of being assembled. Other code from oth
 | Component | Pin(s)/Arduino  | Mass(g) | Power Draw |           
 | - | - | - | - |
 |Weather Balloon| N/A|200|N/A|
-|53-inch Parachute (TBD at a later time)| N/A| N/A|N/A|
+|48-inch Parachute| N/A| N/A|N/A|
 |15in x 13in x 10in Styrofoam Box (Stores Components)| N/A|366|N/A|
 |DS18B20 Internal Temperature Sensor (Green Tape)| 5 / Master Arduino| 9.1|N/A|
 |DS18B20 External Temperature Sensor | 6 / Master Arduino| 9.1 |N/A|
