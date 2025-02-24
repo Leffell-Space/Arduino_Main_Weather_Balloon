@@ -22,8 +22,6 @@ const int R2 = 1965;
 float RS;
 float PPM_acetone;
 float ozoneConcentration;
-
-byte TxByte = 0;
  
 void I2C_TxHandler(void)
 {
