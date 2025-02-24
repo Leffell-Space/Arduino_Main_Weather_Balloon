@@ -4,6 +4,7 @@
 #include <DallasTemperature.h>
 #include <TinyGPS++.h>  // test
 #include <SoftwareSerial.h>
+#include <Wire.h>
 
 TinyGPSPlus gps;
 
@@ -19,6 +20,13 @@ OneWire out(OUTSIDE);
 // Pass our oneWire reference to Dallas Temperature sensor
 DallasTemperature sensors_in(&in);
 DallasTemperature sensors_out(&out);
+
+const byte dataCount = 4;
+
+union {
+ float floatData[dataCount];
+ byte rawData[dataCount*sizeof(float)];
+}myData;
 
 File myFile;
 
@@ -56,6 +64,15 @@ void setup() {
   myFile.flush();
 }
 
+void displayData() {
+  for (int i = 0; i < dataCount; i++)  {
+    Serial.print ("Float n. ");
+    Serial.print (i);
+    Serial.print (" Value: ");
+    Serial.println (myData.floatData[i],6);  
+    } 
+}
+
 void loop() {
   double latitude;
   double longitude;
@@ -65,6 +82,16 @@ void loop() {
   int minutes;
   int seconds;
   float hdop;
+
+  Wire.requestFrom(0x55, 16); // Request From Slave @ 0x55, Data Length = 1Byte
+
+  byte data;
+
+  while(Wire.available()) {  // Read Received Data From Slave Device
+    for(byte i = 0; i < 4*dataCount; i++)
+      myData.rawData[i] = Wire.read(); 
+    displayData();
+  }
 
   while (ss.available() > 0) {
     gps.encode(ss.read());  // Feed data to the GPS library
@@ -112,6 +139,10 @@ void loop() {
         myFile.print(insideCelsius);
         myFile.print(",");
         myFile.print(outsideCelsius);
+        for (int i = 0; i < 4; i++) {
+          myFile.print(myData.floatData[i]);
+          myFile.print(",");
+        }
         myFile.println();
         myFile.flush();
       } else {  // if the file didn't open, print an error:
