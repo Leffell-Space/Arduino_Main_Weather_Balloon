@@ -22,7 +22,7 @@ jobs:
           cd emsdk
           ./emsdk install latest
           ./emsdk activate latest
-          echo "EMS_PATH=$(pwd)/emsdk/emsdk_env.sh" >> $GITHUB_ENV
+          echo "EMS_PATH=$(pwd)/emsdk_env.sh" >> $GITHUB_ENV
       
       # See: https://github.com/arduino/compile-sketches#readme
       - name: Compile sketches
