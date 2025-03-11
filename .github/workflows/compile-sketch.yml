@@ -31,7 +31,7 @@ jobs:
             - source-url: https://github.com/gronat/MS5611.git
             - source-url: https://github.com/DFRobot/DFRobot_OzoneSensor.git
           enable-deltas-report: true
-          cli-compile-flags: "--build-path Arduino_Main_Weather_Balloon/src/build"
+          cli-compile-flags: "--build-path ./src/build"
 
       # This step is needed to pass the size data to the report job.
       - name: Upload sketches report to workflow artifact
@@ -46,4 +46,4 @@ jobs:
         with:
           sketches-reports-source: sketches-reports
           github-token: ${{ secrets.SPACE_API_KEY_GITHUB_PR }}
-          
+
