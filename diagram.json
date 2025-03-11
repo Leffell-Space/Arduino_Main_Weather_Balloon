@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "author": "Samiksha devan",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "wokwi-arduino-uno", "id": "uno", "top": 883.8, "left": 1266.6, "attrs": {} },
+    { "type": "chip-gps-neo6m", "id": "chip1", "top": 1028.22, "left": 1588.8, "attrs": {} },
+    { "type": "wokwi-microsd-card", "id": "sd1", "top": 777.83, "left": 1257.67, "attrs": {} },
+    { "type": "board-ds18b20", "id": "temp1", "top": 1122.07, "left": 1242.48, "attrs": {} },
+    { "type": "board-ds18b20", "id": "temp2", "top": 1102.87, "left": 1290.48, "attrs": {} }
+  ],
+  "connections": [
+    [ "chip1:VCC", "uno:5V", "red", [ "h-19.2", "v67.2", "h-134.4" ] ],
+    [ "chip1:TX", "uno:4", "green", [ "h21.01", "v-144" ] ],
+    [ "chip1:RX", "uno:3", "cyan", [ "v0", "h49.81", "v-182.4", "h-249.6" ] ],
+    [ "sd1:GND", "uno:GND.1", "black", [ "h0" ] ],
+    [ "sd1:VCC", "uno:5V", "red", [ "h01" ] ],
+    [ "sd1:CS", "uno:10", "green", [ "h0" ] ],
+    [ "sd1:DI", "uno:11", "green", [ "h0" ] ],
+    [ "sd1:DO", "uno:12", "green", [ "h0" ] ],
+    [ "sd1:SCK", "uno:13", "green", [ "h0" ] ],
+    [ "chip1:GND", "uno:GND.2", "black", [ "h0" ] ],
+    [ "temp1:GND", "uno:GND.3", "black", [ "h201.6", "v-95.9" ] ],
+    [ "temp1:VCC", "uno:5V", "red", [ "v0" ] ],
+    [ "temp1:DQ", "uno:5", "green", [ "v0" ] ],
+    [ "temp2:VCC", "uno:5V", "red", [ "v0" ] ],
+    [ "temp2:GND", "uno:GND.2", "black", [ "h153.6", "v-76.7" ] ],
+    [ "temp2:DQ", "uno:6", "green", [ "v0" ] ]
+  ],
+  "dependencies": {}
+}

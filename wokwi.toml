@@ -1,0 +1,10 @@
+# Wokwi Configuration File
+# Reference: https://docs.wokwi.com/vscode/project-config
+[wokwi]
+version = 1
+firmware = 'src/build/arduino.avr.uno/src.ino.hex'
+elf = 'src/build/arduino.avr.uno/src.ino.elf'
+gdbServerPort=3333
+[[chip]]
+name = 'gps-neo6m'  # To use the chip in diagram.json, add a part with "chip-inverter" type.
+binary = 'chips/gps-neo6m.chip.wasm'
