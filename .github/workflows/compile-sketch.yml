@@ -15,6 +15,14 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      
+      - name: Rebase branch
+        run: |
+            git config --global user.name 'skolodny'
+            git config --global user.email 'skolodny@student.leffellschool.org'
+            git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+            git config switch origin HEAD:${{ github.head_ref }}
+            git pull
 
       # See: https://github.com/arduino/compile-sketches#readme
       - name: Compile sketches
@@ -39,11 +47,6 @@ jobs:
       
       - name: Commit changes
         run: |
-            git config --global user.name 'skolodny'
-            git config --global user.email 'skolodny@student.leffellschool.org'
-            git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
-            git config pull.rebase true
-            git pull origin HEAD:${{ github.head_ref }}
             git add sketches-reports/
             git commit -am "Automated report"
             git push origin HEAD:${{ github.head_ref }}
