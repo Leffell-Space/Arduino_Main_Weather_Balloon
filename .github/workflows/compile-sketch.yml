@@ -16,9 +16,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Check file paths
-        run: ls -R
-
       # See: https://github.com/arduino/compile-sketches#readme
       - name: Compile sketches
         uses: arduino/compile-sketches@v1
@@ -36,6 +33,9 @@ jobs:
           enable-deltas-report: true
           cli-compile-flags: |
             - --build-path="./src/build/arduino.avr.uno"
+
+      - name: Check file paths
+        run: ls -R
 
       # This step is needed to pass the size data to the report job.
       - name: Upload sketches report to workflow artifact
