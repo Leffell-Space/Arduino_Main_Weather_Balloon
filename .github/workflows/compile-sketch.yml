@@ -33,9 +33,9 @@ jobs:
           enable-deltas-report: true
           cli-compile-flags: |
             - --build-path="./src/build/arduino.avr.uno"
-            
+
       - name: Displays path to all files in the system
-        run: ls -
+        run: ls -R
 
       - name: Test with Wokwi
         uses: wokwi/wokwi-ci-action@v1
