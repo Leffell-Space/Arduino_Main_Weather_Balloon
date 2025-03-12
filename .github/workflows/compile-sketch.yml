@@ -15,14 +15,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-    
-      - name: Install Emscripten
-        run: |
-          git clone https://github.com/emscripten-core/emsdk.git
-          cd emsdk
-          ./emsdk install latest
-          ./emsdk activate latest
-          echo "EMS_PATH=$(pwd)/emsdk_env.sh" >> $GITHUB_ENV
       
       # See: https://github.com/arduino/compile-sketches#readme
       - name: Compile sketches
@@ -41,11 +33,6 @@ jobs:
           enable-deltas-report: true
           cli-compile-flags: |
             - --build-path="./src/build/arduino.avr.uno"
-
-      - name: Compile C to WASM
-        run: |
-          source $EMS_PATH
-          emcc -I/home/runner/work/Arduino_Main_Weather_Balloon/Arduino_Main_Weather_Balloon/emsdk/upstream/emscripten/system/include chips/gps-neo6m.chip.c -o ./chips/gps-neo6m.chip.wasm -s WASM=1
 
       - name: Test with Wokwi
         uses: wokwi/wokwi-ci-action@v1
