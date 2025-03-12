@@ -33,3 +33,4 @@
 
 arduino.json
 c_cpp_properties.json
+src/build/arduino.avr.uno/*
