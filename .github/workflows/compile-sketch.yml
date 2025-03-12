@@ -21,7 +21,7 @@ jobs:
         with:
           find: "myFile.print"
           replace: "Serial.print"
-          include: "src/src.ino"
+          include: "**src.ino"
           regex: true
       
       # See: https://github.com/arduino/compile-sketches#readme
