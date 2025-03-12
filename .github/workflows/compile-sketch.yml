@@ -42,8 +42,14 @@ jobs:
           cli-compile-flags: |
             - -e
 
-      - name: Displays path to all files in the system
-        run: ls -R
+      - name: Read src.ino
+        id: package
+        uses: jaywcjlove/github-action-read-file@main
+        with:
+          path: src/src.ino
+          
+      - name: Echo src.ino
+        run: echo "${{ steps.package.outputs.content }}"
 
       - name: Test with Wokwi
         uses: wokwi/wokwi-ci-action@v1
