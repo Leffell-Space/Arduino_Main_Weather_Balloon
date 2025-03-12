@@ -24,6 +24,15 @@ jobs:
           include: "**src.ino"
           regex: true
       
+      - name: Read package.json
+        id: package
+        uses: juliangruber/read-file-action@v1
+        with:
+          path: ./src/src.ino
+      
+      - name: Echo package.json
+        run: echo "${{ steps.package.outputs.content }}"
+      
       # See: https://github.com/arduino/compile-sketches#readme
       - name: Compile sketches
         uses: arduino/compile-sketches@v1
@@ -41,15 +50,6 @@ jobs:
           enable-deltas-report: true
           cli-compile-flags: |
             - -e
-
-      - name: Read src.ino
-        id: package
-        uses: jaywcjlove/github-action-read-file@main
-        with:
-          path: src/src.ino
-          
-      - name: Echo src.ino
-        run: echo "${{ steps.package.outputs.content }}"
 
       - name: Test with Wokwi
         uses: wokwi/wokwi-ci-action@v1
