@@ -1,0 +1,6 @@
+name: Serial Test
+version: 1
+author: Spencer Kolodny
+
+steps:
+  - wait-serial: 'SD card is ready to use.'
