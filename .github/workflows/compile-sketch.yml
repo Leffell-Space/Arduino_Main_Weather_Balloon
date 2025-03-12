@@ -32,7 +32,7 @@ jobs:
             - source-url: https://github.com/DFRobot/DFRobot_OzoneSensor.git
           enable-deltas-report: true
           cli-compile-flags: |
-            - --build-path="./src/build/arduino.avr.uno"
+            - -e
 
       - name: Displays path to all files in the system
         run: ls -R
