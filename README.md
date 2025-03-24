@@ -28,6 +28,8 @@ This project is currently in the process of being assembled. Other code from oth
 |Apple Airtag | N/A (Stand alone)|11|N/A|
 
 - Wireless transmitter [Add more info]
+- Data that will be received will be displayed with these column headers
+     - Time, Latitude, Longitude, Altitude, Satellite Count, HDOP, Inside Temperature, Outside Temperature
 - [Add other components]
 
 ## Installation
