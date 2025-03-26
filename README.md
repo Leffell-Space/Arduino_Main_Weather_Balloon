@@ -24,12 +24,13 @@ This project is currently in the process of being assembled. Other code from oth
 |Sensirion I2C SCD30|SCL, SDA (0x61) / Slave Arduino|3|N/A|
 |MG-811 Analog CO2 Gas Sensor| A0 / Slave Arduino|6|N/A|
 |EXCEED-RC 1800 mAh battery| Master and Slave Arduino|273| |
-|AKASO EK7000 4K Camera (x2)|N/A (Stand alone)|288|N/A|
+|Insta360 ONE X2 Camera|N/A (Stand alone)|223|N/A|
 |Apple Airtag | N/A (Stand alone)|11|N/A|
 
 - Wireless transmitter [Add more info]
 - Data that will be received will be displayed with these column headers
      - Time, Latitude, Longitude, Altitude, Satellite Count, HDOP, Inside Temperature, Outside Temperature
+- 
 - [Add other components]
 
 ## Installation
