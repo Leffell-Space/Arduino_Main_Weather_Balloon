@@ -7,7 +7,7 @@
 
 TinyGPSPlus gps;
 
-SoftwareSerial ss(4, 3);  // RX, TX pins (adjust as needed)
+//SoftwareSerial ss(4, 3);  // RX, TX pins (adjust as needed)
 
 #define INSIDE 5
 #define OUTSIDE 6
@@ -29,7 +29,7 @@ String dataFile = "data.csv";
 void setup() {
 
   Serial.begin(9600);
-  ss.begin(9600);  // GPS baud rate
+  //ss.begin(9600);  // GPS baud rate
 
   pinMode(pinCS, OUTPUT);
 
@@ -52,7 +52,7 @@ void setup() {
   // Create/Open file
   myFile = SD.open(dataFile, FILE_WRITE);
 
-  myFile.println("Time,Latitude,Longitude,Altitude,Satellite Count,HDOP,Inside Temperature,Outside Temperature");
+  Serial.println("Time,Latitude,Longitude,Altitude,Satellite Count,HDOP,Inside Temperature,Outside Temperature");
   myFile.flush();
 }
 
@@ -65,7 +65,7 @@ void loop() {
   int minutes;
   int seconds;
   float hdop;
-
+  /*
   while (ss.available() > 0) {
     gps.encode(ss.read());  // Feed data to the GPS library
     if (gps.location.isUpdated() && gps.satellites.isUpdated()) {
@@ -93,30 +93,31 @@ void loop() {
       // if the file opened okay, write to it:
       if (myFile) {
         // Write to file
-        myFile.print(hours);
-        myFile.print(":");
-        myFile.print(minutes);
-        myFile.print(":");
-        myFile.print(seconds);
-        myFile.print(",");
-        myFile.print(latitude, 6);
-        myFile.print(",");
-        myFile.print(longitude, 6);
-        myFile.print(",");
-        myFile.print(altitude, 3);
-        myFile.print(",");
-        myFile.print(satelliteCount);
-        myFile.print(",");
-        myFile.print(hdop, 2);
-        myFile.print(",");
-        myFile.print(insideCelsius);
-        myFile.print(",");
-        myFile.print(outsideCelsius);
-        myFile.println();
+        Serial.print(hours);
+        Serial.print(":");
+        Serial.print(minutes);
+        Serial.print(":");
+        Serial.print(seconds);
+        Serial.print(",");
+        Serial.print(latitude, 6);
+        Serial.print(",");
+        Serial.print(longitude, 6);
+        Serial.print(",");
+        Serial.print(altitude, 3);
+        Serial.print(",");
+        Serial.print(satelliteCount);
+        Serial.print(",");
+        Serial.print(hdop, 2);
+        Serial.print(",");
+        Serial.print(insideCelsius);
+        Serial.print(",");
+        Serial.print(outsideCelsius);
+        Serial.println();
         myFile.flush();
       } else {  // if the file didn't open, print an error:
         Serial.println("error opening " + dataFile);
       }
     }
   }
+    */
 }
