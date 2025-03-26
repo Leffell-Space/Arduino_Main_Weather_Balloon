@@ -39,7 +39,7 @@ This project is currently in the process of being assembled. Other code from oth
    git clone https://github.com/Leffell-Space/Arduino_Main_Weather_Balloon.git
    ```
 2. Open the project in the Arduino IDE
-3. Install the necessary libraries (if any)
+3. Install the necessary libraries
 4. Upload the code to your Arduino board
 
 ## Leffell Space Program Members
