@@ -27,5 +27,10 @@
     [ "temp2:GND", "uno:GND.2", "black", [ "h153.6", "v-76.7" ] ],
     [ "temp2:DQ", "uno:6", "green", [ "v0" ] ]
   ],
-  "dependencies": {}
+  "dependencies": {},
+  "serialMonitor": {
+  "display": "auto",
+  "newline": "lf",
+  "convertEol": true
+}
 }
