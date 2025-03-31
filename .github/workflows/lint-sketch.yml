@@ -19,5 +19,6 @@ jobs:
       - name: Lint sketches
         uses: arduino/arduino-lint-action@v2
         with:
+          path: src/
           compliance: strict
           
