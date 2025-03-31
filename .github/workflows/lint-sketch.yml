@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  compile-sketches:
+  lint-sketches:
     runs-on: ubuntu-latest
 
     steps:
