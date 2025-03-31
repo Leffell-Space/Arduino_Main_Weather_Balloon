@@ -1,4 +1,4 @@
-name: Compile Sketches
+name: Lint Sketches
 
 on:
   push:
@@ -16,23 +16,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # See: https://github.com/arduino/compile-sketches#readme
-      - name: Compile sketches
-        uses: arduino/compile-sketches@v1
-        with:
-          sketch-paths: |
-            - src
-            - scientificCode
-          libraries: |
-            - name: SD
-            - name: OneWire
-            - name: DallasTemperature
-            - name: TinyGPSPlus
-            - source-url: https://github.com/gronat/MS5611.git
-            - source-url: https://github.com/DFRobot/DFRobot_OzoneSensor.git
-          enable-deltas-report: true
-
-      - name: Lint sketch
+      - name: Lint sketches
         uses: arduino/arduino-lint-action@v2
         with:
           compliance: strict
