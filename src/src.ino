@@ -4,10 +4,11 @@
 #include <DallasTemperature.h>
 #include <TinyGPS++.h>  // test
 #include <SoftwareSerial.h>
+#include <Wire.h>
 
 TinyGPSPlus gps;
 
-SoftwareSerial ss(4, 3);  // RX, TX pins (adjust as needed)
+SoftwareSerial ss(9, 8);  // RX, TX pins (adjust as needed)
 
 #define INSIDE 5
 #define OUTSIDE 6
@@ -20,25 +21,28 @@ OneWire out(OUTSIDE);
 DallasTemperature sensors_in(&in);
 DallasTemperature sensors_out(&out);
 
-File myFile;
+const byte dataCount = 4;
 
-int pinCS = 10;
+union {
+ float floatData[dataCount];
+ byte rawData[dataCount*sizeof(float)];
+}myData;
+
+File myFile;
 
 String dataFile = "data.csv";
 
 void setup() {
 
   Serial.begin(9600);
-  ss.begin(9600);  // GPS baud rate
-
-  pinMode(pinCS, OUTPUT);
+  //ss.begin(9600);  // GPS baud rate
 
   // Start up the library
-  sensors_in.begin();
-  sensors_out.begin();
+  //sensors_in.begin();
+  //sensors_out.begin();
 
   // SD Card Initialization
-  if (SD.begin()) {
+  if (SD.begin(10)) {
     Serial.println("SD card is ready to use.");
   } else {
     Serial.println("SD card initialization failed");
@@ -47,16 +51,33 @@ void setup() {
 
   if (SD.exists(dataFile)) {
     SD.remove(dataFile);
+    Serial.println("file exists");
+  } else {
+    Serial.println("Creating file");
   }
 
   // Create/Open file
   myFile = SD.open(dataFile, FILE_WRITE);
+  if (dataFile) {
+  myFile.println("Time,Latitude,Longitude,Altitude,Satellite Count,HDOP,Inside Temperature,Outside Temperature,Pressure,PPM Acetone,Air Quality,Ozone Concentration");
+  myFile.close();
+  Serial.println("RAN");
+  }
 
-  myFile.println("Time,Latitude,Longitude,Altitude,Satellite Count,HDOP,Inside Temperature,Outside Temperature");
-  myFile.flush();
+  return;
+}
+
+void displayData() {
+  for (int i = 0; i < dataCount; i++)  {
+    Serial.print ("Float n. ");
+    Serial.print (i);
+    Serial.print (" Value: ");
+    Serial.println (myData.floatData[i],6);  
+    } 
 }
 
 void loop() {
+  
   double latitude;
   double longitude;
   double altitude;
@@ -65,9 +86,22 @@ void loop() {
   int minutes;
   int seconds;
   float hdop;
+  /*
+  Wire.requestFrom(0x55, 16); // Request From Slave @ 0x55, Data Length = 1Byte
 
+  byte data;
+
+  while(Wire.available()) {  // Read Received Data From Slave Device
+    for(byte i = 0; i < 4*dataCount; i++)
+      myData.rawData[i] = Wire.read(); 
+    displayData();
+  }
+  */
+  Serial.println("BREAK 1");
   while (ss.available() > 0) {
+    Serial.println("BREAK 2");
     gps.encode(ss.read());  // Feed data to the GPS library
+    
     if (gps.location.isUpdated() && gps.satellites.isUpdated()) {
       // Get location information
       latitude = gps.location.lat();
@@ -91,6 +125,7 @@ void loop() {
       float outsideCelsius = sensors_out.getTempCByIndex(0);
 
       // if the file opened okay, write to it:
+      
       if (myFile) {
         // Write to file
         myFile.print(hours);
@@ -112,11 +147,18 @@ void loop() {
         myFile.print(insideCelsius);
         myFile.print(",");
         myFile.print(outsideCelsius);
+        for (int i = 0; i < 4; i++) {
+          myFile.print(",");
+          myFile.print(myData.floatData[i]);
+        }
         myFile.println();
         myFile.flush();
       } else {  // if the file didn't open, print an error:
         Serial.println("error opening " + dataFile);
       }
+      
     }
+    
   }
+  
 }
