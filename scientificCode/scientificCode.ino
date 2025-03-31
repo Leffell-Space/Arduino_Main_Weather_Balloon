@@ -56,8 +56,8 @@ void loop() {
   }
 
   // calculate RS
-   RS = R2 * (1-volts);
-   RS = RS/volts;
+  RS = R2 * (1-volts);
+  RS = RS/volts;
   // calculate acetone PPM
   PPM_acetone = 159.6 - 133.33 * (RS / R0);
 
