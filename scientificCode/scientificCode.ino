@@ -10,14 +10,6 @@ DFRobot_OzoneSensor Ozone;
 MS5611 baro;
 int32_t pressure;
 float filtered = 0;
-int sensorValue = 0;
-const int AQPin = 0;
-float volts;
-
-const int R0 = 346.76;
-const int R2 = 1965;
-float RS;
-float PPM_acetone;
 
 void setup() {
   // Start barometer
@@ -46,20 +38,12 @@ void setup() {
 void loop() {
   // Read pressure
   pressure = baro.getPressure();
-  sensorValue = analogRead(AQPin);
-  volts = sensorValue * 5;
-  volts = volts / 1023;
+
   if (filtered != 0) {
     filtered = filtered + 0.1 * (pressure - filtered);
   } else {
     filtered = pressure;  // first reading so set filtered to reading
   }
-
-  // calculate RS
-  RS = R2 * (1 - volts);
-  RS = RS / volts;
-  // calculate acetone PPM
-  PPM_acetone = 159.6 - 133.33 * (RS / R0);
 
   int16_t ozoneConcentration = Ozone.readOzoneData(COLLECT_NUMBER);
 
@@ -67,19 +51,14 @@ void loop() {
   float altitude = 44330.0 * (1.0 - pow(filtered / 101325.0, 0.1903));
 
   Serial.print("Pressure: " + String(filtered) + " | ");
-  //Serial.print(String(pow((filtered / 101325.0), 0.1903)));
   Serial.print("Altitude: " + String(altitude) + " ft | ");
-  Serial.print("Air Quality: " + String(PPM_acetone) + " | ");
-  Serial.print("Volts: " + String(volts) + " | ");
   Serial.println("Ozone: " + String(ozoneConcentration) + " PPB.");
-
 
   if (altitude < 300) {
     digitalWrite(BUZZER_PIN, HIGH);
   } else {
     digitalWrite(BUZZER_PIN, LOW);
   }
-
 
   delay(1);
 }
