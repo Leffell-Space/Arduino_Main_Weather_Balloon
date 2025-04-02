@@ -21,7 +21,7 @@ This project is currently in the process of being assembled. Other code from oth
 |MS5611-01BA03 Barometric Pressure Sensor| A4,A5 (0x76,77) / Slave Arduino|2| N/A|
 |GY-GPS6MV2 GPS Module| 3,4 / Master Arduino|74|N/A|
 |I2C Ozone Sensor| A4,A5 (0x73) / Slave Arduino|5| N/A |
-|Sensirion I2C SCD30|SCL, SDA (0x61) / Slave Arduino|3|N/A|
+|Sensirion I2C SCD30 - Carbon Dioxide Sensor|SCL, SDA (0x61) / Slave Arduino|3|N/A|
 |EXCEED-RC 1800 mAh battery| Master and Slave Arduino|273| |
 |AKASO EK7000 4K Camera (x2)|N/A (Stand alone)|288|N/A|
 |Apple Airtag | N/A (Stand alone)|11|N/A|
