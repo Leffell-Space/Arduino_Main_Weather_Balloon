@@ -1,0 +1,11 @@
+{
+    "name": "gps-neo6m",
+    "author": "Samiksha devan",
+    "pins": [
+      "VCC",
+      "GND",
+      "RX",
+      "TX"
+    ],
+    "controls": []
+  }
