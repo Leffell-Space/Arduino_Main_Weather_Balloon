@@ -29,6 +29,7 @@ jobs:
             - name: DallasTemperature
             - name: TinyGPSPlus
             - source-url: https://github.com/Sensirion/arduino-i2c-scd30.git
+            - source-url: https://github.com/Sensirion/arduino-core/
             - source-url: https://github.com/gronat/MS5611.git
             - source-url: https://github.com/DFRobot/DFRobot_OzoneSensor.git
           enable-deltas-report: true
