@@ -68,7 +68,7 @@ void loop() {
   Serial.print("Altitude: " + String(altitude) + " ft | ");
   Serial.println("Ozone: " + String(ozoneConcentration) + " PPB.");
   Serial.print("CO2 Concentration: " + String(co2Concentration) + " | ");
-  Serial.print("Temperature: " + String(temperature) + " ft | ");
+  Serial.print("Temperature: " + String(temperature) + " °C | ");
   Serial.println("Humidity: " + String(humidity) + " PPB.");
 
   if (altitude < 300) {
