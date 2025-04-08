@@ -1,4 +1,4 @@
-#include <Arduino.h>
+#include <SensirionCore.h>
 #include <MS5611.h>
 #include "DFRobot_OzoneSensor.h"
 #include <SensirionI2cScd30.h>
