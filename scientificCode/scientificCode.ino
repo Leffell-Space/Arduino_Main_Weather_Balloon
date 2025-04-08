@@ -67,10 +67,9 @@ void loop() {
   Serial.print("Pressure: " + String(filtered) + " | ");
   Serial.print("Altitude: " + String(altitude) + " ft | ");
   Serial.println("Ozone: " + String(ozoneConcentration) + " PPB.");
-  Serial.print("CO2 Concentration: " + String(co2Concentration) + " | ");
-  Serial.print("Temperature: " + String(temperature) + " ft | ");
-  Serial.println("Humidity: " + String(humidity) + " PPB.");
-
+  Serial.print("CO2 Concentration: " + String(co2Concentration) + " ppm | ");
+  Serial.print("Temperature: " + String(temperature) + " °C | ");
+  Serial.println("Humidity: " + String(humidity) + " RH%.");
   if (altitude < 300) {
     digitalWrite(BUZZER_PIN, HIGH);
   } else {
