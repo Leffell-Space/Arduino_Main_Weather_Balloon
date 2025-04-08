@@ -1,8 +1,8 @@
+#include <Arduino.h>
 #include <MS5611.h>
 #include "DFRobot_OzoneSensor.h"
 #include <SensirionI2cScd30.h>
 #include <Wire.h>
-#include <Arduino.h>
 
 #define COLLECT_NUMBER 20  // collect number, the collection range is 1-100
 #define Ozone_IICAddress OZONE_ADDRESS_3
