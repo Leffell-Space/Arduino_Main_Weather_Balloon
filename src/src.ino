@@ -8,7 +8,7 @@
 
 TinyGPSPlus gps;
 
-SoftwareSerial ss(9, 8);  // RX, TX pins (adjust as needed)
+SoftwareSerial ss(4, 3);  // RX, TX pins (adjust as needed)
 
 #define INSIDE 5
 #define OUTSIDE 6
@@ -35,7 +35,7 @@ String dataFile = "data.csv";
 void setup() {
 
   Serial.begin(9600);
-  //ss.begin(9600);  // GPS baud rate
+  ss.begin(9600);  // GPS baud rate
 
   // Start up the library
   //sensors_in.begin();
@@ -97,12 +97,13 @@ void loop() {
     displayData();
   }
   
-  Serial.println("BREAK 1");
+  //Serial.println("BREAK 1");
   while (ss.available() > 0) {
-    Serial.println("BREAK 2");
+    //Serial.println("BREAK 2");
     gps.encode(ss.read());  // Feed data to the GPS library
     
     if (gps.location.isUpdated() && gps.satellites.isUpdated()) {
+      Serial.println("BREAK 3");
       // Get location information
       latitude = gps.location.lat();
       longitude = gps.location.lng();

@@ -7,6 +7,8 @@
 #define Ozone_IICAddress OZONE_ADDRESS_3
 #define N_FLOATS 6
 
+SensirionI2cScd30 sensor;
+
 volatile byte* arrayPointer;
 float array[N_FLOATS] = {0, 0, 0, 0, 0, 0};
 
@@ -17,10 +19,9 @@ DFRobot_OzoneSensor Ozone;
 MS5611 baro;
 int32_t pressure;
 float filtered = 0;
-int32_t sensorValue = 0;
-const int AQPin = 0;
-float volts;
-
+float co2Concentration = 0;
+float temperature = 0;
+float humidity = 0; 
 
 void I2C_TxHandler(void)
 {
@@ -78,13 +79,12 @@ void loop() {
   float altitude = 44330.0 * (1.0 - pow(filtered / 101325.0, 0.1903));
 
   sensor.blockingReadMeasurementData(co2Concentration, temperature, humidity);
-
-  Serial.print("Pressure: " + String(filtered) + " | ");
-  Serial.print("Altitude: " + String(altitude) + " ft | ");
-  Serial.print("Ozone: " + String(ozoneConcentration) + " PPB  |");
-  Serial.print("CO2 Concentration: " + String(co2Concentration) + " ppm | ");
-  Serial.print("Temperature: " + String(temperature) + " °C | ");
-  Serial.println("Humidity: " + String(humidity) + " RH%.");
+  Serial.print("Pressure: " + String(filtered, 4) + " | ");
+  Serial.print("Altitude: " + String(altitude, 4) + " ft | ");
+  Serial.print("Ozone: " + String(ozoneConcentration, 4) + " PPB  |");
+  Serial.print("CO2 Concentration: " + String(co2Concentration, 4) + " ppm | ");
+  Serial.print("Temperature: " + String(temperature, 4) + " °C | ");
+  Serial.println("Humidity: " + String(humidity, 4) + " RH%.");
   if (altitude < 300) {
     digitalWrite(BUZZER_PIN, HIGH);
   } else {
