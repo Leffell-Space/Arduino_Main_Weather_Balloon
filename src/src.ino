@@ -21,7 +21,7 @@ OneWire out(OUTSIDE);
 DallasTemperature sensors_in(&in);
 DallasTemperature sensors_out(&out);
 
-const byte dataCount = 4;
+const byte dataCount = 6;
 
 union {
  float floatData[dataCount];
@@ -86,7 +86,7 @@ void loop() {
   int minutes;
   int seconds;
   float hdop;
-  /*
+  
   Wire.requestFrom(0x55, 16); // Request From Slave @ 0x55, Data Length = 1Byte
 
   byte data;
@@ -96,7 +96,7 @@ void loop() {
       myData.rawData[i] = Wire.read(); 
     displayData();
   }
-  */
+  
   Serial.println("BREAK 1");
   while (ss.available() > 0) {
     Serial.println("BREAK 2");
@@ -147,7 +147,7 @@ void loop() {
         myFile.print(insideCelsius);
         myFile.print(",");
         myFile.print(outsideCelsius);
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < dataCount; i++) {
           myFile.print(",");
           myFile.print(myData.floatData[i]);
         }

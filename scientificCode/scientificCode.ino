@@ -5,10 +5,10 @@
 
 #define COLLECT_NUMBER 20  // collect number, the collection range is 1-100
 #define Ozone_IICAddress OZONE_ADDRESS_3
-#define N_FLOATS 4
+#define N_FLOATS 6
 
 volatile byte* arrayPointer;
-float array[N_FLOATS] = {0, 0, 0, 0};
+float array[N_FLOATS] = {0, 0, 0, 0, 0, 0};
 
 #define BUZZER_PIN 9  // Define buzzer pin
 
@@ -50,8 +50,8 @@ void setup() {
    */
   Ozone.setModes(MEASURE_MODE_PASSIVE);
 
-    Wire.begin(0x55); // Initialize I2C (Slave Mode: address=0x55 )
-    Wire.onRequest(I2C_TxHandler);
+  Wire.begin(0x55); // Initialize I2C (Slave Mode: address=0x55 )
+  Wire.onRequest(I2C_TxHandler);
 
   pinMode(BUZZER_PIN, OUTPUT);
 
@@ -90,6 +90,13 @@ void loop() {
   } else {
     digitalWrite(BUZZER_PIN, LOW);
   }
+
+  array[0] = filtered;  // Pressure
+  array[1] = altitude;  // Altitude
+  array[2] = ozoneConcentration;  // Ozone concentration
+  array[3] = co2Concentration;  // CO2 concentration
+  array[4] = temperature;  // Temperature
+  array[5] = humidity;  // Humidity
 
   delay(1);
 }
