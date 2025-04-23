@@ -65,7 +65,7 @@ void loop() {
 
   Serial.print("Pressure: " + String(filtered) + " | ");
   Serial.print("Altitude: " + String(altitude) + " ft | ");
-  Serial.println("Ozone: " + String(ozoneConcentration) + " PPB.");
+  Serial.print("Ozone: " + String(ozoneConcentration) + " PPB  |");
   Serial.print("CO2 Concentration: " + String(co2Concentration) + " ppm | ");
   Serial.print("Temperature: " + String(temperature) + " °C | ");
   Serial.println("Humidity: " + String(humidity) + " RH%.");
