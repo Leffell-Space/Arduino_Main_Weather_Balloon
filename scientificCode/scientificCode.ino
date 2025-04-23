@@ -5,6 +5,11 @@
 
 #define COLLECT_NUMBER 20  // collect number, the collection range is 1-100
 #define Ozone_IICAddress OZONE_ADDRESS_3
+#define N_FLOATS 4
+
+volatile byte* arrayPointer;
+float array[N_FLOATS] = {0, 0, 0, 0};
+
 #define BUZZER_PIN 9  // Define buzzer pin
 
 DFRobot_OzoneSensor Ozone;
@@ -12,11 +17,19 @@ DFRobot_OzoneSensor Ozone;
 MS5611 baro;
 int32_t pressure;
 float filtered = 0;
+int32_t sensorValue = 0;
+const int AQPin = 0;
+float volts;
 
-SensirionI2cScd30 sensor;
-float co2Concentration = 0.0;
-float temperature = 0.0;
-float humidity = 0.0;
+
+void I2C_TxHandler(void)
+{
+  byte buffer[4*N_FLOATS];
+  arrayPointer = (byte*) &array;
+  for(byte i = 0; i < 4*N_FLOATS; i++) 
+    buffer[i] = arrayPointer[i];
+  Wire.write(buffer,4*N_FLOATS);
+}
 
 void setup() {
   // Start barometer
@@ -36,6 +49,9 @@ void setup() {
    * MEASURE_MODE_PASSIVE           passive mode
    */
   Ozone.setModes(MEASURE_MODE_PASSIVE);
+
+    Wire.begin(0x55); // Initialize I2C (Slave Mode: address=0x55 )
+    Wire.onRequest(I2C_TxHandler);
 
   pinMode(BUZZER_PIN, OUTPUT);
 
