@@ -1,5 +1,7 @@
 #include <MS5611.h>
 #include "DFRobot_OzoneSensor.h"
+#include <SensirionI2cScd30.h>
+#include <Wire.h>
 
 #define COLLECT_NUMBER 20  // collect number, the collection range is 1-100
 #define Ozone_IICAddress OZONE_ADDRESS_3
@@ -10,6 +12,11 @@ DFRobot_OzoneSensor Ozone;
 MS5611 baro;
 int32_t pressure;
 float filtered = 0;
+
+SensirionI2cScd30 sensor;
+float co2Concentration = 0.0;
+float temperature = 0.0;
+float humidity = 0.0;
 
 void setup() {
   // Start barometer
@@ -32,6 +39,10 @@ void setup() {
 
   pinMode(BUZZER_PIN, OUTPUT);
 
+  Wire.begin();
+  sensor.begin(Wire, SCD30_I2C_ADDR_61);
+  sensor.startPeriodicMeasurement(0);
+
   delay(2);
 }
 
@@ -50,10 +61,14 @@ void loop() {
   // Calculate altitude (assuming sea level pressure is 1013.25 hPa)
   float altitude = 44330.0 * (1.0 - pow(filtered / 101325.0, 0.1903));
 
+  sensor.blockingReadMeasurementData(co2Concentration, temperature, humidity);
+
   Serial.print("Pressure: " + String(filtered) + " | ");
   Serial.print("Altitude: " + String(altitude) + " ft | ");
-  Serial.println("Ozone: " + String(ozoneConcentration) + " PPB.");
-
+  Serial.print("Ozone: " + String(ozoneConcentration) + " PPB  |");
+  Serial.print("CO2 Concentration: " + String(co2Concentration) + " ppm | ");
+  Serial.print("Temperature: " + String(temperature) + " °C | ");
+  Serial.println("Humidity: " + String(humidity) + " RH%.");
   if (altitude < 300) {
     digitalWrite(BUZZER_PIN, HIGH);
   } else {
