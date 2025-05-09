@@ -1,11 +1,12 @@
 # Leffell High Altitude Balloon Main Arduino Code
 
-This project is currently in the process of being assembled. Other code from other components can be found eleswhere in the [Leffell-Space](https://github.com/orgs/Leffell-Space/repositories) organization and we are in the process of adding code from those separate repositories to this one. This is will be the final code that gets launched.
+This project is in the process of being assembled. Code from other components can be found elsewhere in the [Leffell-Space](https://github.com/orgs/Leffell-Space/repositories) organization, and we are adding code from those separate repositories to this one. This will be the final code that gets launched.
 
 ## Features
 
 - Collects temperature, humidity, and pressure data
 - Tracks balloon location using GPS
+- Records high-quality flight footage
 - Transmits data wirelessly to a ground station
 
 ## Components
@@ -26,8 +27,7 @@ This project is currently in the process of being assembled. Other code from oth
 |EXCEED-RC 1800 mAh battery| Master and Slave Arduino|273| | 
 |Insta360 ONE X2 Camera|N/A (Stand alone)|223|N/A|
 |Sensirion I2C SCD30 - Carbon Dioxide Sensor|A4, A5 (0x61) / Slave Arduino|3|N/A|
-|EXCEED-RC 1800 mAh battery| Master and Slave Arduino|273| |
-|AKASO EK7000 4K Camera (x2)|N/A (Stand alone)|288|N/A|
+|TalentCell Lithium ion battery pack| Arduino and Camera|529| |
 |Apple Airtag | N/A (Stand alone)|11|N/A|
 
 - Wireless transmitter [Add more info]
