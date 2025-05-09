@@ -23,7 +23,7 @@ This project is currently in the process of being assembled. Other code from oth
 |I2C Ozone Sensor| A4,A5 (0x73) / Slave Arduino|5| N/A |
 |Sensirion I2C SCD30|A4,A5 (0x61) / Slave Arduino|3|N/A|
 |MG-811 Analog CO2 Gas Sensor| A0 / Slave Arduino|6|N/A|
-|EXCEED-RC 1800 mAh battery| Master and Slave Arduino|273| |
+|EXCEED-RC 1800 mAh battery| Master and Slave Arduino|273| | 
 |Insta360 ONE X2 Camera|N/A (Stand alone)|223|N/A|
 |Apple Airtag | N/A (Stand alone)|11|N/A|
 
