@@ -1,0 +1,30 @@
+name: Lint Sketches
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  lint-sketches:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Lint src
+        uses: arduino/arduino-lint-action@v2
+        with:
+          path: src/
+          compliance: specification
+    
+      - name: Lint scientificCode
+        uses: arduino/arduino-lint-action@v2
+        with:
+          path: scientificCode/
+          compliance: specification
+          
