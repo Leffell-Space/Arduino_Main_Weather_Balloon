@@ -20,7 +20,7 @@ jobs:
       - name: Compile sketches
         uses: arduino/compile-sketches@v1
         with:
-          fqbn: "arduino-avr-mega"
+          fqbn: "arduino:avr:mega"
           sketch-paths: |
             - src
           libraries: |
