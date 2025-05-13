@@ -28,6 +28,7 @@ This project is currently in the process of being assembled. Other code from oth
 |AKASO EK7000 4K Camera (x2)|N/A (Stand alone)|288|
 |Apple Airtag | N/A (Stand alone)|11|
 
+- Arduino Mega needs to be used as Arduino UNO does not have enough storage space
 - Wireless transmitter [Add more info]
 - SD Card [Also add more info]
 - Data that will be received will be displayed with these column headers
