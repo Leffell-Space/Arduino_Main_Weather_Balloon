@@ -24,7 +24,7 @@ jobs:
           sketch-paths: |
             - src
           libraries: |
-            - name: SD
+            - source-url: https://github.com/arduino-libraries/SD.git
             - name: OneWire
             - name: DallasTemperature
             - name: TinyGPSPlus
