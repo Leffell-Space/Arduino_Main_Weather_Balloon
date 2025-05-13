@@ -1,3 +1,4 @@
+#include <SD.h>
 #include <SPI.h>
 #include <OneWire.h>
 #include <DallasTemperature.h>
