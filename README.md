@@ -22,11 +22,14 @@ This project is currently in the process of being assembled. Other code from oth
 |MS5611-01BA03 Barometric Pressure Sensor| A4,A5 (0x76,77)|2|
 |I2C Ozone Sensor| A4,A5 (0x73) |5|
 |Sensirion I2C SCD30 - Carbon Dioxide Sensor|A4, A5 (0x61)|3|
+|MG-811 Analog CO2 Gas Sensor| A0 |6|
+|Insta360 ONE X2 Camera|N/A|223|
 |EXCEED-RC 1800 mAh battery| Power Input |273|
 |AKASO EK7000 4K Camera (x2)|N/A (Stand alone)|288|
 |Apple Airtag | N/A (Stand alone)|11|
 
 - Wireless transmitter [Add more info]
+- SD Card [Also add more info]
 - Data that will be received will be displayed with these column headers
      - Time,Latitude, Longitude, Altitude, Inside Temperature,Outside Temperature, Pressure, Ozone Concentration, CO2 Quality, Temperature, Humidity
 - [Add other components]
