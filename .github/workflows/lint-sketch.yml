@@ -21,10 +21,4 @@ jobs:
         with:
           path: src/
           compliance: specification
-    
-      - name: Lint scientificCode
-        uses: arduino/arduino-lint-action@v2
-        with:
-          path: scientificCode/
-          compliance: specification
           

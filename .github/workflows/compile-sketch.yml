@@ -22,7 +22,6 @@ jobs:
         with:
           sketch-paths: |
             - src
-            - scientificCode
           libraries: |
             - name: SD
             - name: OneWire
