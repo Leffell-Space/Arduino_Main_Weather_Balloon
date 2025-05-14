@@ -17,6 +17,7 @@ This project is in the process of being assembled. Code from other components ca
 |Weather Balloon| N/A|200|
 |48-inch Parachute| N/A|N/A|
 |15in x 13in x 10in Styrofoam Box (Stores Components)| N/A|366|
+|SD Card Reader|MISO - 50, MOSI - 51, CLK - 52, CS - 53|4.5|
 |DS18B20 Internal Temperature Sensor (Green Tape)| 5 | 9.1 |
 |DS18B20 External Temperature Sensor | 6 | 9.1 |
 |GY-GPS6MV2 GPS Module| 3,4 |74|
@@ -32,7 +33,7 @@ This project is in the process of being assembled. Code from other components ca
 - Wireless transmitter [Add more info]
 - SD Card [Also add more info]
 - Data that will be received will be displayed with these column headers
-     - Time,Latitude, Longitude, Altitude, Inside Temperature,Outside Temperature, Pressure, Ozone Concentration, CO2 Quality, Temperature, Humidity
+     - Time, Latitude, Longitude, Altitude, Inside Temperature,Outside Temperature, Pressure, Ozone Concentration, CO2 Quality, Temperature, Humidity
 - [Add other components]
 
 ## Installation
