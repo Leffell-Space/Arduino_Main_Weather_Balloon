@@ -20,9 +20,9 @@ jobs:
       - name: Compile sketches
         uses: arduino/compile-sketches@v1
         with:
+          fqbn: "arduino:avr:mega"
           sketch-paths: |
             - src
-            - scientificCode
           libraries: |
             - name: SD
             - name: OneWire

@@ -12,28 +12,27 @@ This project is in the process of being assembled. Code from other components ca
 ## Components
 
 
-| Component | Pin(s)/Arduino  | Mass(g) | Power Draw |           
-| - | - | - | - |
-|Weather Balloon| N/A|200|N/A|
-|48-inch Parachute| N/A| N/A|N/A|
-|15in x 13in x 10in Styrofoam Box (Stores Components)| N/A|366|N/A|
-|DS18B20 Internal Temperature Sensor (Green Tape)| 5 / Master Arduino| 9.1|N/A|
-|DS18B20 External Temperature Sensor | 6 / Master Arduino| 9.1 |N/A|
-|GY-GPS6MV2 GPS Module| 3,4 / Master Arduino|74|N/A|
-|MS5611-01BA03 Barometric Pressure Sensor| A4,A5 (0x76,77) / Slave Arduino|2| N/A|
-|I2C Ozone Sensor| A4,A5 (0x73) / Slave Arduino|5| N/A |
-|Sensirion I2C SCD30|A4,A5 (0x61) / Slave Arduino|3|N/A|
-|MG-811 Analog CO2 Gas Sensor| A0 / Slave Arduino|6|N/A|
-|EXCEED-RC 1800 mAh battery| Master and Slave Arduino|273| | 
-|Insta360 ONE X2 Camera|N/A (Stand alone)|223|N/A|
-|Sensirion I2C SCD30 - Carbon Dioxide Sensor|A4, A5 (0x61) / Slave Arduino|3|N/A|
-|TalentCell Lithium ion battery pack| Arduino and Camera|529| |
-|Apple Airtag | N/A (Stand alone)|11|N/A|
+| Component | Pin(s) | Mass(g) |         
+| - | - | - |
+|Weather Balloon| N/A|200|
+|48-inch Parachute| N/A|N/A|
+|15in x 13in x 10in Styrofoam Box (Stores Components)| N/A|366|
+|DS18B20 Internal Temperature Sensor (Green Tape)| 5 | 9.1 |
+|DS18B20 External Temperature Sensor | 6 | 9.1 |
+|GY-GPS6MV2 GPS Module| 3,4 |74|
+|MS5611-01BA03 Barometric Pressure Sensor| A4,A5 (0x76,77)|2|
+|I2C Ozone Sensor| A4,A5 (0x73) |5|
+|Sensirion I2C SCD30 - Carbon Dioxide Sensor|A4, A5 (0x61)|3|
+|MG-811 Analog CO2 Gas Sensor| A0 |6|
+|Insta360 ONE X2 Camera|N/A|223|
+|TalentCell Lithium ion battery pack|Arduino and Camera|529|
+|Apple Airtag | N/A (Stand alone)|11|
 
+- Arduino Mega needs to be used as Arduino UNO does not have enough storage space
 - Wireless transmitter [Add more info]
 - SD Card [Also add more info]
 - Data that will be received will be displayed with these column headers
-     - Time, Latitude, Longitude, Altitude, Satellite Count, HDOP, Inside Temperature, Outside Temperature
+     - Time,Latitude, Longitude, Altitude, Inside Temperature,Outside Temperature, Pressure, Ozone Concentration, CO2 Quality, Temperature, Humidity
 - [Add other components]
 
 ## Installation
