@@ -56,7 +56,6 @@ void setup() {
   if (!SD.begin(53)) {
     Serial.println("initialization failed!");
   }
-  //Serial.println("initialization done.");
 
   if (SD.exists(dataFile)) {
     SD.remove(dataFile);
@@ -67,10 +66,8 @@ void setup() {
 
   // Create/Open file
   myFile = SD.open(dataFile, FILE_WRITE);
-  //Serial.println(myFile.position());
   myFile.println("Time,Lat,Long,Alt,Inside Temp,Outside Temp,Pressure,Ozone Concentration,CO2 Quality,Temperature,Humidity");
   myFile.flush();
-  //Serial.println("RAN");
   
   // Start barometer
   baro = MS5611();
@@ -96,8 +93,6 @@ void setup() {
 }
 
 void loop() {
-
-  // Implement your timestamp logic here
   while (Serial1.available() > 0) {
     gps.encode(Serial1.read());  // Feed data to the GPS library
     //Serial.println(gps.location.isUpdated());
@@ -122,10 +117,6 @@ void loop() {
     int16_t ozoneConcentration = Ozone.readOzoneData(COLLECT_NUMBER);
     sensor.blockingReadMeasurementData(co2Concentration, temperature, humidity);
 
-
-    //Serial.println("BREAK 1");
-
-
     sensors_in.requestTemperatures();
     float insideCelsius = sensors_in.getTempCByIndex(0);
     sensors_out.requestTemperatures();
@@ -137,9 +128,6 @@ void loop() {
       digitalWrite(BUZZER_PIN, LOW);
     }
 
-
-    // if the file opened okay, write to it:
-    // Write to file
     float data[13] = {hours, minutes, seconds, latitude, longitude, altitude, insideCelsius, outsideCelsius, pressure, ozoneConcentration, co2Concentration, temperature, humidity};
 
     int currentMillis = millis();
@@ -157,9 +145,6 @@ void loop() {
           } else {
             allData += String(data[i]) + ",";
           }
-          Serial.print(allData);
-          Serial.print(", i: ");
-          Serial.println(i);
         }
         Serial.println(allData);
         myFile.println(allData);
