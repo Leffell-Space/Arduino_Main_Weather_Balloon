@@ -2,7 +2,7 @@
 #include <SPI.h>
 #include <OneWire.h>
 #include <DallasTemperature.h>
-#include <TinyGPS++.h>  // test
+#include <TinyGPS++.h>
 #include <SoftwareSerial.h>
 #include <Wire.h>
 #include <MS5611.h>
@@ -41,64 +41,78 @@ float co2Concentration = 0;
 float temperature = 0;
 float humidity = 0;
 
-double latitude;
-double longitude;
-double altitude;
-int hours;
-int minutes;
-int seconds;
-int previousMillis = 0;
+double latitude = 0.0;
+double longitude = 0.0;
+double altitude = 0.0;
+int hours = 0;
+int minutes = 0;
+int seconds = 0;
+unsigned long previousMillis = 0;
+unsigned long lastGPSRead = 0;
 
 void setup() {
   Serial.begin(9600);
-  Serial1.begin(9600);
-    // SD Card Initialization
+  Serial1.begin(9600);  // Try different baud rate
+  
+  // SD Card Initialization
   if (!SD.begin(53)) {
-    Serial.println("initialization failed!");
+    Serial.println("SD initialization failed!");
+  } else {
+    Serial.println("SD initialized successfully");
   }
 
   if (SD.exists(dataFile)) {
-    SD.remove(dataFile);
-    Serial.println("file exists");
+    Serial.println("File exists");
   } else {
     Serial.println("Creating file");
   }
 
   // Create/Open file
   myFile = SD.open(dataFile, FILE_WRITE);
-  myFile.println("Time,Lat,Long,Alt,Inside Temp,Outside Temp,Pressure,Ozone Concentration,CO2 Quality,Temperature,Humidity");
-  myFile.flush();
+  if (myFile) {
+    myFile.println("Time,Lat,Long,Alt,Inside Temp,Outside Temp,Pressure,Ozone Concentration,CO2 Quality,Temperature,Humidity");
+    myFile.flush();
+    myFile.close();
+    Serial.println("Header written to file");
+  } else {
+    Serial.println("Error opening file");
+  }
   
   // Start barometer
   baro = MS5611();
   baro.begin();
-  
-  // Start serial (UART)
 
   if (!Ozone.begin(Ozone_IICAddress)) {
-    Serial.println("Ozone sensor I2c device number error !");
+    Serial.println("Ozone sensor I2c device number error!");
   } else {
     Serial.println("Ozone sensor working");
   }
   Ozone.setModes(MEASURE_MODE_PASSIVE);
   
-
-  // Start up the library
+  // Start up the temperature sensors
   sensors_in.begin();
   sensors_out.begin();
 
   pinMode(BUZZER_PIN, OUTPUT);
+  Wire.begin();
   sensor.begin(Wire, SCD30_I2C_ADDR_61);
-  sensor.startPeriodicMeasurement(0);
+  sensor.startPeriodicMeasurement(0);  
 }
 
 void loop() {
+  // Process GPS data
+  unsigned long currentMillis = millis();
+  
+  // Continuously feed GPS data
   while (Serial1.available() > 0) {
-    gps.encode(Serial1.read());  // Feed data to the GPS library
-    //Serial.println(gps.location.isUpdated());
-    if (gps.location.isUpdated()) {
-      //Serial.println("BREAK 3");
-
+    gps.encode(Serial1.read());
+  }
+  
+  // Check GPS status every 5 seconds
+  if (currentMillis - lastGPSRead >= 2000) {
+    lastGPSRead = currentMillis;
+    
+    if (gps.location.isValid()) {
       // Get location information
       latitude = gps.location.lat();
       longitude = gps.location.lng();
@@ -111,6 +125,10 @@ void loop() {
     }
   }
 
+  // Read other sensors and process data every 10 seconds
+  if (currentMillis - previousMillis >= 10000) {
+    previousMillis = currentMillis;
+    
     // Read pressure
     pressure = baro.getPressure();
 
@@ -128,28 +146,30 @@ void loop() {
       digitalWrite(BUZZER_PIN, LOW);
     }
 
-    float data[13] = {hours, minutes, seconds, latitude, longitude, altitude, insideCelsius, outsideCelsius, pressure, ozoneConcentration, co2Concentration, temperature, humidity};
-
-    int currentMillis = millis();
-    if (currentMillis - previousMillis >= 10000) {  //write to SD card only every 10 seconds
-      previousMillis = currentMillis;
-      myFile = SD.open(dataFile, FILE_WRITE);
-      if (myFile) {
-        // use a for loop to concatante the array into a string
-        String allData = "";        //write one long string
-        for (int i = 0; i < 13; i++) {
-          if (i < 2) {
-            allData += String(data[i]) + ":";
-          } else if (i == 12) {
-            allData += String(data[i]);
-          } else {
-            allData += String(data[i]) + ",";
-          }
-        }
-        Serial.println(allData);
-        myFile.println(allData);
-        myFile.flush();
-        myFile.close();
-      }
+    // Format and write data to SD
+    String timeStr = String(hours < 10 ? "0" : "") + String(hours) + ":" + 
+                    String(minutes < 10 ? "0" : "") + String(minutes) + ":" + 
+                    String(seconds < 10 ? "0" : "") + String(seconds);
+                    
+    String dataStr = timeStr + "," + 
+                    String(latitude, 6) + "," + 
+                    String(longitude, 6) + "," + 
+                    String(altitude) + "," + 
+                    String(insideCelsius) + "," + 
+                    String(outsideCelsius) + "," + 
+                    String(pressure) + "," + 
+                    String(ozoneConcentration) + "," + 
+                    String(co2Concentration) + "," + 
+                    String(temperature) + "," + 
+                    String(humidity);
+    
+    myFile = SD.open(dataFile, FILE_WRITE);
+    if (myFile) {
+      Serial.println("Writing to SD: " + dataStr);
+      myFile.println(dataStr);
+      myFile.close();
+    } else {
+      Serial.println("Error opening file for writing");
     }
+  }
 }
