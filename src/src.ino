@@ -3,7 +3,6 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
 #include <TinyGPS++.h>
-#include <SoftwareSerial.h>
 #include <Wire.h>
 #include <MS5611.h>
 #include "DFRobot_OzoneSensor.h"
