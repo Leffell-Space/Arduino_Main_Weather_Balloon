@@ -43,6 +43,7 @@ float humidity = 0;
 double latitude = 0.0;
 double longitude = 0.0;
 double altitude = 0.0;
+double hdop = 0.0;
 int hours = 0;
 int minutes = 0;
 int seconds = 0;
@@ -69,7 +70,7 @@ void setup() {
   // Create/Open file
   myFile = SD.open(dataFile, FILE_WRITE);
   if (myFile) {
-    myFile.println("Time,Lat,Long,Alt,Inside Temp,Outside Temp,Pressure,Ozone Concentration,CO2 Quality,Temperature,Humidity");
+    myFile.println("Time,Lat,Long,Alt,HDOP,Inside Temp,Outside Temp,Pressure,Ozone,CO2,Temperature,Humidity");
     myFile.flush();
     myFile.close();
     Serial.println("Header written to file");
@@ -116,6 +117,7 @@ void loop() {
       latitude = gps.location.lat();
       longitude = gps.location.lng();
       altitude = gps.altitude.meters();  // Altitude in meters
+      hdop = gps.hdop.hdop();  // Horizontal dilution of precision
 
       // Get the timestamp (in hours, minutes, seconds)
       hours = gps.time.hour();
@@ -154,6 +156,7 @@ void loop() {
                     String(latitude, 6) + "," + 
                     String(longitude, 6) + "," + 
                     String(altitude) + "," + 
+                    String(hdop) + "," +
                     String(insideCelsius) + "," + 
                     String(outsideCelsius) + "," + 
                     String(pressure) + "," + 
