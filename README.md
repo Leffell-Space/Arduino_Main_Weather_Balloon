@@ -33,7 +33,7 @@ This project is in the process of being assembled. Code from other components ca
 - Wireless transmitter [Add more info]
 - SD Card [Also add more info]
 - Data that will be received will be displayed with these column headers
-     - Time, Latitude, Longitude, Altitude, HDOP, Inside Temperature, Outside Temperature, Pressure, Ozone Concentration, CO2 Concentration, Temperature, Humidity
+- Time, Latitude, Longitude, Altitude, HDOP, Inside Temperature, Outside Temperature, Pressure, Ozone Concentration, CO2 Concentration, Temperature, Humidity
 - [Add other components]
 
 ## Installation
