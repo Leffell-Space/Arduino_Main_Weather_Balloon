@@ -54,6 +54,4 @@ This project is in the process of being assembled. Code from other components ca
 - Ari Messinger (SO)
 - Oren Podietz (SO)
   
-## [Add license and link to license]
-
 ## [Add finished project documentation]
