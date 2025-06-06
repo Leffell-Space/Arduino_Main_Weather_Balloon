@@ -29,7 +29,7 @@ String dataFile = "data.csv";
 #define Ozone_IICAddress OZONE_ADDRESS_3
 SensirionI2cScd30 sensor;
 
-#define BUZZER_PIN 9  // Define buzzer pin
+#define BUZZER_PIN 4  // Define buzzer pin
 
 DFRobot_OzoneSensor Ozone;
 
