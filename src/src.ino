@@ -7,6 +7,7 @@
 #include <MS5611.h>
 #include "DFRobot_OzoneSensor.h"
 #include <SensirionI2cScd30.h>
+#include <config.h>
 
 TinyGPSPlus gps;
 
@@ -55,11 +56,15 @@ void setup() {
   Serial1.begin(9600);  // Try different baud rate
   
   // SD Card Initialization
-  if (!SD.begin(53)) {
-    Serial.println("SD initialization failed!");
-  } else {
-    Serial.println("SD initialized successfully");
-  }
+  #if debug
+    if (!SD.begin(53)) {
+      Serial.println("SD initialization failed!");
+    } else {
+      Serial.println("SD initialized successfully");
+    }
+  #else 
+    SD.begin(53);
+  #endif
 
   if (SD.exists(dataFile)) {
     Serial.println("File exists");
@@ -73,21 +78,28 @@ void setup() {
     myFile.println("Time,Lat,Long,Alt,HDOP,Inside Temp,Outside Temp,Pressure,Ozone,CO2,Temperature,Humidity");
     myFile.flush();
     myFile.close();
+  #if debug
     Serial.println("Header written to file");
+  #endif
   } else {
+  #if debug
     Serial.println("Error opening file");
+  #endif
   }
   
   // Start barometer
   Wire.begin();
   baro = MS5611();
   baro.begin();
-
-  if (!Ozone.begin(Ozone_IICAddress)) {
-    Serial.println("Ozone sensor I2c device number error!");
-  } else {
-    Serial.println("Ozone sensor working");
-  }
+  #if debug
+    if (!Ozone.begin(Ozone_IICAddress)) {
+      Serial.println("Ozone sensor I2c device number error!");
+    } else {
+      Serial.println("Ozone sensor working");
+    }
+  #else
+    Ozone.begin(Ozone_IICAddress);
+  #endif
   Ozone.setModes(MEASURE_MODE_PASSIVE);
   
   // Start up the temperature sensors
@@ -167,11 +179,15 @@ void loop() {
     
     myFile = SD.open(dataFile, FILE_WRITE);
     if (myFile) {
-      Serial.println("Writing to SD: " + dataStr);
+      #if debug
+        Serial.println("Writing to SD: " + dataStr);
+      #endif
       myFile.println(dataStr);
       myFile.close();
     } else {
-      Serial.println("Error opening file for writing");
+      #if debug
+        Serial.println("Error opening file for writing");
+      #endif
     }
   }
 }

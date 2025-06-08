@@ -1,0 +1,1 @@
+#define debug 0 // Set to 1 to enable debug print messages, 0 to disable
