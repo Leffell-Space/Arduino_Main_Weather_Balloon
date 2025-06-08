@@ -44,7 +44,12 @@ This project is in the process of being assembled. Code from other components ca
    ```
 2. Open the project in the Arduino IDE
 3. Install the necessary libraries
-4. Upload the code to your Arduino board
+4. **Configure your build options:**  
+   Copy the `config.h.example` file to `config.h` in the same directory. Edit `config.h` to enable or disable features (such as sensors and debug output) by changing the values from `1` (enabled) to `0` (disabled) as needed for your hardware setup.
+   ```bash
+   cp src/config.h.example src/config.h
+   ```
+5. Upload the code to your Arduino board
 
 ## Leffell Space Program Members
 - Raz Idan (Instructor)
