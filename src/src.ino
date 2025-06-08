@@ -79,6 +79,7 @@ void setup() {
   }
   
   // Start barometer
+  Wire.begin();
   baro = MS5611();
   baro.begin();
 
@@ -94,7 +95,6 @@ void setup() {
   sensors_out.begin();
 
   pinMode(BUZZER_PIN, OUTPUT);
-  Wire.begin();
   sensor.begin(Wire, SCD30_I2C_ADDR_61);
   sensor.startPeriodicMeasurement(0);  
 }
