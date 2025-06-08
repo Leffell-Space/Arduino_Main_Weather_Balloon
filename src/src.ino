@@ -7,34 +7,50 @@
 #include <MS5611.h>
 #include "DFRobot_OzoneSensor.h"
 #include <SensirionI2cScd30.h>
+#include "config.h"
 
 TinyGPSPlus gps;
 
-#define INSIDE 5   //inside temp
-#define OUTSIDE 6  //outside temp
+#if enable_TempSensors
+  #define INSIDE 5   //inside temp
+  #define OUTSIDE 6  //outside temp
 
-// Setup a oneWire instance to communicate with any OneWire devices
-OneWire in(INSIDE);
-OneWire out(OUTSIDE);
+  // Setup a oneWire instance to communicate with any OneWire devices
+  OneWire in(INSIDE);
+  OneWire out(OUTSIDE);
 
-// Pass our oneWire reference to Dallas Temperature sensor
-DallasTemperature sensors_in(&in);
-DallasTemperature sensors_out(&out);
+  // Pass our oneWire reference to Dallas Temperature sensor
+  DallasTemperature sensors_in(&in);
+  DallasTemperature sensors_out(&out);
+#endif
 
 File myFile;
 
 String dataFile = "data.csv";
 
-#define COLLECT_NUMBER 20  // collect number, the collection range is 1-100
-#define Ozone_IICAddress OZONE_ADDRESS_3
-SensirionI2cScd30 sensor;
+#if enable_Ozone
+  #define COLLECT_NUMBER 20  // collect number, the collection range is 1-100
+  #define Ozone_IICAddress OZONE_ADDRESS_3
+#endif
 
-#define BUZZER_PIN 4  // Define buzzer pin
+#if enable_Sensirion
+  SensirionI2cScd30 sensor;
+#endif
 
-DFRobot_OzoneSensor Ozone;
+#if enable_buzzer
+  #define BUZZER_PIN 4  // Define buzzer pin
+#endif
 
-MS5611 baro;
-int32_t pressure;
+#if enable_Ozone
+  DFRobot_OzoneSensor Ozone;
+#endif
+
+#if enable_MS5611
+  MS5611 baro;
+#endif
+
+int32_t pressure = 0;
+int16_t ozoneConcentration = 0;
 float filtered = 0;
 float co2Concentration = 0;
 float temperature = 0;
@@ -55,17 +71,23 @@ void setup() {
   Serial1.begin(9600);  // Try different baud rate
   
   // SD Card Initialization
-  if (!SD.begin(53)) {
-    Serial.println("SD initialization failed!");
-  } else {
-    Serial.println("SD initialized successfully");
-  }
+  #if debug
+    if (!SD.begin(53)) {
+      Serial.println("SD initialization failed!");
+    } else {
+      Serial.println("SD initialized successfully");
+    }
+  #else 
+    SD.begin(53);
+  #endif
 
-  if (SD.exists(dataFile)) {
-    Serial.println("File exists");
-  } else {
-    Serial.println("Creating file");
-  }
+  #if debug
+    if (SD.exists(dataFile)) {
+      Serial.println("File exists");
+    } else {
+      Serial.println("Creating file");
+    }
+  #endif
 
   // Create/Open file
   myFile = SD.open(dataFile, FILE_WRITE);
@@ -73,30 +95,50 @@ void setup() {
     myFile.println("Time,Lat,Long,Alt,HDOP,Inside Temp,Outside Temp,Pressure,Ozone,CO2,Temperature,Humidity");
     myFile.flush();
     myFile.close();
-    Serial.println("Header written to file");
+    #if debug
+      Serial.println("Header written to file");
+    #endif
   } else {
-    Serial.println("Error opening file");
+    #if debug
+      Serial.println("Error opening file");
+    #endif
   }
   
   // Start barometer
   Wire.begin();
-  baro = MS5611();
-  baro.begin();
 
-  if (!Ozone.begin(Ozone_IICAddress)) {
-    Serial.println("Ozone sensor I2c device number error!");
-  } else {
-    Serial.println("Ozone sensor working");
-  }
-  Ozone.setModes(MEASURE_MODE_PASSIVE);
+  #if enable_MS5611
+    baro = MS5611();
+    baro.begin();
+  #endif
+
+  #if debug && enable_Ozone
+    if (!Ozone.begin(Ozone_IICAddress)) {
+      Serial.println("Ozone sensor I2c device number error!");
+    } else {
+      Serial.println("Ozone sensor working");
+    }
+  #elif enable_Ozone
+    Ozone.begin(Ozone_IICAddress);
+  #endif
+  #if enable_Ozone
+    Ozone.setModes(MEASURE_MODE_PASSIVE);
+  #endif
   
   // Start up the temperature sensors
-  sensors_in.begin();
-  sensors_out.begin();
+  #if enable_TempSensors
+    sensors_in.begin();
+    sensors_out.begin();
+  #endif
 
-  pinMode(BUZZER_PIN, OUTPUT);
-  sensor.begin(Wire, SCD30_I2C_ADDR_61);
-  sensor.startPeriodicMeasurement(0);  
+  #if enable_buzzer
+    pinMode(BUZZER_PIN, OUTPUT);
+  #endif
+
+  #if enable_Sensirion
+    sensor.begin(Wire, SCD30_I2C_ADDR_61);
+    sensor.startPeriodicMeasurement(0);  
+  #endif
 }
 
 void loop() {
@@ -131,21 +173,32 @@ void loop() {
     previousMillis = currentMillis;
     
     // Read pressure
-    pressure = baro.getPressure();
+    #if enable_MS5611
+      pressure = baro.getPressure();
+    #endif
+    
+    #if enable_Ozone
+      ozoneConcentration = Ozone.readOzoneData(COLLECT_NUMBER);
+    #endif
 
-    int16_t ozoneConcentration = Ozone.readOzoneData(COLLECT_NUMBER);
-    sensor.blockingReadMeasurementData(co2Concentration, temperature, humidity);
+    #if enable_Sensirion
+      sensor.blockingReadMeasurementData(co2Concentration, temperature, humidity);
+    #endif
 
-    sensors_in.requestTemperatures();
-    float insideCelsius = sensors_in.getTempCByIndex(0);
-    sensors_out.requestTemperatures();
-    float outsideCelsius = sensors_out.getTempCByIndex(0);
+    #if enable_TempSensors
+      sensors_in.requestTemperatures();
+      float insideCelsius = sensors_in.getTempCByIndex(0);
+      sensors_out.requestTemperatures();
+      float outsideCelsius = sensors_out.getTempCByIndex(0);
+    #endif
 
-    if (altitude < 300) {
-      digitalWrite(BUZZER_PIN, HIGH);
-    } else {
-      digitalWrite(BUZZER_PIN, LOW);
-    }
+    #if enable_buzzer
+      if (altitude < 300 && currentMillis > 30000) {
+        digitalWrite(BUZZER_PIN, HIGH);
+      } else {
+        digitalWrite(BUZZER_PIN, LOW);
+      }
+    #endif
 
     // Format and write data to SD
     String timeStr = String(hours < 10 ? "0" : "") + String(hours) + ":" + 
@@ -167,11 +220,15 @@ void loop() {
     
     myFile = SD.open(dataFile, FILE_WRITE);
     if (myFile) {
-      Serial.println("Writing to SD: " + dataStr);
+      #if debug
+        Serial.println("Writing to SD: " + dataStr);
+      #endif
       myFile.println(dataStr);
       myFile.close();
     } else {
-      Serial.println("Error opening file for writing");
+      #if debug
+        Serial.println("Error opening file for writing");
+      #endif
     }
   }
 }

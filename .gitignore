@@ -33,3 +33,5 @@
 
 arduino.json
 c_cpp_properties.json
+settings.json
+config.h

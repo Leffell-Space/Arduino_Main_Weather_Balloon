@@ -16,6 +16,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Copy config.h.example to config.h
+        run: cp src/config.h.example src/config.h
+
       # See: https://github.com/arduino/compile-sketches#readme
       - name: Compile sketches
         uses: arduino/compile-sketches@v1
@@ -47,4 +50,4 @@ jobs:
         with:
           sketches-reports-source: sketches-reports
           github-token: ${{ secrets.SPACE_API_KEY_GITHUB_PR }}
-          
+
