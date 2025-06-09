@@ -56,6 +56,10 @@ float co2Concentration = 0;
 float temperature = 0;
 float humidity = 0;
 
+//calibrated empirically
+float insideOffset = -0.2;
+float outsideOffset = -1.0;
+
 double latitude = 0.0;
 double longitude = 0.0;
 double altitude = 0.0;
@@ -186,10 +190,10 @@ void loop() {
     #endif
 
     #if enable_TempSensors
-      sensors_in.requestTemperatures();
-      float insideCelsius = sensors_in.getTempCByIndex(0);
-      sensors_out.requestTemperatures();
-      float outsideCelsius = sensors_out.getTempCByIndex(0);
+    sensors_in.requestTemperatures();
+    float insideCelsius = sensors_in.getTempCByIndex(0)+insideOffset;
+    sensors_out.requestTemperatures();
+    float outsideCelsius = sensors_out.getTempCByIndex(0)+outsideOffset;
     #endif
 
     #if enable_buzzer
