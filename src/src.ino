@@ -190,10 +190,10 @@ void loop() {
     #endif
 
     #if enable_TempSensors
-    sensors_in.requestTemperatures();
-    float insideCelsius = sensors_in.getTempCByIndex(0)+insideOffset;
-    sensors_out.requestTemperatures();
-    float outsideCelsius = sensors_out.getTempCByIndex(0)+outsideOffset;
+      sensors_in.requestTemperatures();
+      float insideCelsius = sensors_in.getTempCByIndex(0)+insideOffset;
+      sensors_out.requestTemperatures();
+      float outsideCelsius = sensors_out.getTempCByIndex(0)+outsideOffset;
     #endif
 
     #if enable_buzzer
