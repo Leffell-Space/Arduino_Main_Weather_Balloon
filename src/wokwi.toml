@@ -1,0 +1,5 @@
+[wokwi]
+version = 1
+firmware = 'build/arduino.avr.mega/src.ino.hex'
+elf = 'build/arduino.avr.mega/src.ino.elf'
+gdbServerPort=3333
