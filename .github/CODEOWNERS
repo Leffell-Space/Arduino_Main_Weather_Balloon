@@ -1,2 +1,2 @@
-./src/* @Leffell-Space/main-code-reviewers
-./.github/* @Leffell-Space/main-code-reviewers
+src/** @Leffell-Space/main-code-reviewers
+.github/** @Leffell-Space/main-code-reviewers
