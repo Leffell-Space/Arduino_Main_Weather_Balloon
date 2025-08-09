@@ -38,7 +38,6 @@ jobs:
             - source-url: https://github.com/Sensirion/arduino-core.git
             - source-url: https://github.com/gronat/MS5611.git
             - source-url: https://github.com/DFRobot/DFRobot_OzoneSensor.git
-          enable-deltas-report: true
           cli-compile-flags: |
             - -e
 
