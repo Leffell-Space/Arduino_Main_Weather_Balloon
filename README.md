@@ -20,11 +20,12 @@ This project is in the process of being assembled. Code from other components ca
 |SD Card Reader|MISO - 50, MOSI - 51, CLK - 52, CS - 53|4.5|
 |DS18B20 Internal Temperature Sensor (Green Tape)| 5 | 9.1 |
 |DS18B20 External Temperature Sensor | 6 | 9.1 |
-|GY-GPS6MV2 GPS Module| 3,4 |74|
+|GY-GPS6MV2 GPS Module| RX1, TX1 |74|
 |MS5611-01BA03 Barometric Pressure Sensor| A4,A5 (0x76,77)|2|
 |I2C Ozone Sensor| A4,A5 (0x73) |5|
 |Sensirion I2C SCD30 - Carbon Dioxide Sensor|A4, A5 (0x61)|3|
 |MG-811 Analog CO2 Gas Sensor| A0 |6|
+|Buzzer| 4 |7.7|
 |Insta360 ONE X2 Camera|N/A|223|
 |TalentCell Lithium ion battery pack|Arduino and Camera|529|
 |Apple Airtag | N/A (Stand alone)|11|

@@ -1,0 +1,51 @@
+name: Wokwi Test Workflow
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+        - src/**
+        - chips/**
+        - wokwi.toml
+        - serial.test.yaml
+        - diagram.json
+
+jobs:
+  wokwi-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Copy config.h.example to config.h
+        run: cp src/wokwi-config.h src/config.h
+
+      # See: https://github.com/arduino/compile-sketches#readme
+      - name: Compile sketches
+        uses: arduino/compile-sketches@v1
+        with:
+          fqbn: "arduino:avr:mega"
+          sketch-paths: |
+            - src
+          libraries: |
+            - name: SD
+            - name: OneWire
+            - name: DallasTemperature
+            - name: TinyGPSPlus
+            - source-url: https://github.com/Sensirion/arduino-i2c-scd30.git
+            - source-url: https://github.com/Sensirion/arduino-core.git
+            - source-url: https://github.com/gronat/MS5611.git
+            - source-url: https://github.com/DFRobot/DFRobot_OzoneSensor.git
+          enable-deltas-report: true
+          cli-compile-flags: |
+            - -e
+
+      - name: Test with Wokwi
+        uses: wokwi/wokwi-ci-action@v1
+        with:
+          token: ${{ secrets.WOKWI_CLI_TOKEN }}
+          path: / # directory with wokwi.toml, relative to repo's root
+          scenario: 'serial.test.yaml' # optional
+          timeout: 12000
