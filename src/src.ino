@@ -70,6 +70,10 @@ int seconds = 0;
 unsigned long previousMillis = 0;
 unsigned long lastGPSRead = 0;
 
+double prevAltitude = -99999.0;
+double lastGPSAltitude = 0.0;
+unsigned long lastGPSAltitudeUpdate = 0;
+
 void setup() {
   Serial.begin(9600);
   Serial1.begin(9600);  // Try different baud rate
@@ -174,6 +178,14 @@ void loop() {
       hours = gps.time.hour();
       minutes = gps.time.minute();
       seconds = gps.time.second();
+
+// Track last GPS altitude update
+#if enable_buzzer
+      if (altitude != lastGPSAltitude) {
+        lastGPSAltitude = altitude;
+        lastGPSAltitudeUpdate = millis();
+      }
+#endif
     }
   }
 
@@ -207,7 +219,30 @@ void loop() {
 #endif
 
 #if enable_buzzer
-    if (altitude < 300 && currentMillis > 30000) {
+    // Track altitude trend for buzzer logic
+    // Consider altitude "updated" if it changed in the last 3 GPS cycles (6 seconds)
+    bool altitudeUpdated = (millis() - lastGPSAltitudeUpdate) < 6000;
+    bool buzz = false;
+
+    if (altitudeUpdated) {
+      if (prevAltitude != -99999.0) {
+        // Buzz if below 1000 and trend is downward or flat
+        if (altitude < 1000 && altitude <= prevAltitude + 100) {
+          buzz = true;
+        }
+      } else {
+        // First valid altitude reading
+        if (altitude < 1000) {
+          buzz = true;
+        }
+      }
+      prevAltitude = altitude;
+    } else {
+      // No new altitude: always buzz
+      buzz = true;
+    }
+
+    if (buzz) {
       digitalWrite(BUZZER_PIN, HIGH);
     } else {
       digitalWrite(BUZZER_PIN, LOW);
