@@ -25,7 +25,7 @@ This project is in the process of being assembled. Code from other components ca
 |I2C Ozone Sensor| A4,A5 (0x73) |5|
 |Sensirion I2C SCD30 - Carbon Dioxide Sensor|A4, A5 (0x61)|3|
 |MG-811 Analog CO2 Gas Sensor| A0 |6|
-|Buzzer| 4 |?|
+|Buzzer| 4 |7.7|
 |Insta360 ONE X2 Camera|N/A|223|
 |TalentCell Lithium ion battery pack|Arduino and Camera|529|
 |Apple Airtag | N/A (Stand alone)|11|
