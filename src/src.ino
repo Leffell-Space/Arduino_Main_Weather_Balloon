@@ -156,9 +156,9 @@ void loop() {
 
 // Check GPS status every 2 seconds
 #if wokwi_test
-  bool gps_time = 1000;
+  unsigned long gps_time = 1000;
 #else
-  bool gps_time = 2000;
+  unsigned long gps_time = 2000;
 #endif
   if (currentMillis - lastGPSRead >= gps_time) {
     lastGPSRead = currentMillis;
@@ -179,9 +179,9 @@ void loop() {
 
 // Read other sensors and process data every 10 seconds
 #if wokwi_test
-  bool process_time = 1000;
+  unsigned long process_time = 1000;
 #else
-  bool process_time = 10000;
+  unsigned long process_time = 10000;
 #endif
   if (currentMillis - previousMillis >= process_time) {
     previousMillis = currentMillis;
