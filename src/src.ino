@@ -154,8 +154,13 @@ void loop() {
     gps.encode(Serial1.read());
   }
 
-  // Check GPS status every 5 seconds
-  if (currentMillis - lastGPSRead >= 2000) {
+  // Check GPS status every 2 seconds
+  #if wokwi_test
+    bool gps_time = 1000;
+  #else 
+    bool gps_time = 2000;
+  #endif
+  if (currentMillis - lastGPSRead >= gps_time) {
     lastGPSRead = currentMillis;
 
     if (gps.location.isValid()) {
@@ -173,6 +178,11 @@ void loop() {
   }
 
   // Read other sensors and process data every 10 seconds
+  #if wokwi_test
+    bool process_time = 1000;
+  #else
+    bool process_time = 10000;
+  #endif
   if (currentMillis - previousMillis >= process_time) {
     previousMillis = currentMillis;
 
