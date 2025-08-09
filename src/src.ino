@@ -173,7 +173,7 @@ void loop() {
   }
 
   // Read other sensors and process data every 10 seconds
-  if (currentMillis - previousMillis >= 10000) {
+  if (currentMillis - previousMillis >= process_time) {
     previousMillis = currentMillis;
 
 // Read pressure
