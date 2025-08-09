@@ -3,7 +3,7 @@
   "author": "Leffell-Space",
   "editor": "wokwi",
   "parts": [
-    { "type": "wokwi-arduino-mega", "id": "mega", "top": 58.2, "left": 6, "attrs": {} },
+    { "type": "wokwi-arduino-mega", "id": "mega", "top": 77.4, "left": -13.2, "attrs": {} },
     { "type": "wokwi-microsd-card", "id": "sd1", "top": 278.63, "left": 259.27, "attrs": {} },
     { "type": "board-ds18b20", "id": "temp1", "top": -10.73, "left": 215.28, "attrs": {} },
     { "type": "board-ds18b20", "id": "temp2", "top": -10.73, "left": 263.28, "attrs": {} },
@@ -13,7 +13,8 @@
       "top": -36,
       "left": 136.2,
       "attrs": { "volume": "0.1" }
-    }
+    },
+    { "type": "chip-gps-neo6m", "id": "chip1", "top": -18.18, "left": 302.4, "attrs": {} }
   ],
   "connections": [
     [ "mega:50", "sd1:DO", "green", [ "v0" ] ],
@@ -29,7 +30,11 @@
     [ "temp1:VCC", "mega:5V", "red", [ "v172.8", "h-69.5" ] ],
     [ "temp2:GND", "mega:GND.1", "black", [ "h-67.2", "v19.2", "h-76.6" ] ],
     [ "temp2:DQ", "mega:6", "blue", [ "v9.6", "h-72.4" ] ],
-    [ "temp2:VCC", "mega:5V", "red", [ "v172.8", "h-117.5" ] ]
+    [ "temp2:VCC", "mega:5V", "red", [ "v172.8", "h-117.5" ] ],
+    [ "chip1:GND", "mega:GND.1", "black", [ "h0" ] ],
+    [ "chip1:VCC", "mega:5V", "red", [ "h0" ] ],
+    [ "chip1:TX", "mega:19", "green", [ "h0" ] ],
+    [ "mega:18", "chip1:RX", "green", [ "v0" ] ]
   ],
   "dependencies": {}
 }

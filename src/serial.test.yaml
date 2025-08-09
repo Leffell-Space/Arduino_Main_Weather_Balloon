@@ -1,6 +1,0 @@
-name: Serial Test
-version: 1
-author: Leffell-Space
-
-steps:
-  - wait-serial: 'SD initialized successfully'

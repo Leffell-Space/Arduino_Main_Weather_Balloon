@@ -1,4 +1,4 @@
-name: Compile Sketches
+name: Wokwi Test Workflow
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  compile-sketches:
+  wokwi-test:
     runs-on: ubuntu-latest
 
     steps:
@@ -36,18 +36,13 @@ jobs:
             - source-url: https://github.com/gronat/MS5611.git
             - source-url: https://github.com/DFRobot/DFRobot_OzoneSensor.git
           enable-deltas-report: true
+          cli-compile-flags: |
+            - -e
 
-      # This step is needed to pass the size data to the report job.
-      - name: Upload sketches report to workflow artifact
-        uses: actions/upload-artifact@v4
+      - name: Test with Wokwi
+        uses: wokwi/wokwi-ci-action@v1
         if: github.event_name == 'pull_request'
         with:
-          name: sketches-reports
-          path: sketches-reports
-
-      - uses: arduino/report-size-deltas@v1
-        if: github.event_name == 'pull_request'
-        with:
-          sketches-reports-source: sketches-reports
-          github-token: ${{ secrets.SPACE_API_KEY_GITHUB_PR }}
-
+          token: ${{ secrets.WOKWI_CLI_TOKEN }}
+          path: / # directory with wokwi.toml, relative to repo's root
+          scenario: 'serial.test.yaml' # optional
