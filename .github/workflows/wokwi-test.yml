@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Copy config.h.example to config.h
-        run: cp src/config.h.example src/config.h
+        run: cp src/wokwi-config.h src/config.h
 
       # See: https://github.com/arduino/compile-sketches#readme
       - name: Compile sketches
