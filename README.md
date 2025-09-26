@@ -27,7 +27,7 @@ This project is in the process of being assembled. Code from other components ca
 |MG-811 Analog CO2 Gas Sensor| A0 |6|
 |Buzzer| 4 |7.7|
 |Insta360 ONE X2 Camera|N/A|223|
-|TalentCell Lithium ion battery pack|Arduino and Camera|529|
+|TalentCell Lithium ion battery pack|Arduino and Camera|388|
 |Apple Airtag | N/A (Stand alone)|11|
 
 - Arduino Mega needs to be used as Arduino UNO does not have enough storage space
