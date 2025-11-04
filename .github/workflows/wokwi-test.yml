@@ -47,4 +47,4 @@ jobs:
           token: ${{ secrets.WOKWI_CLI_TOKEN }}
           path: / # directory with wokwi.toml, relative to repo's root
           scenario: 'serial.test.yaml' # optional
-          timeout: 5000
+          timeout: 15000
