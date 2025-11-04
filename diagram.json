@@ -14,7 +14,7 @@
       "left": 136.2,
       "attrs": { "volume": "0.1" }
     },
-    { "type": "chip-gps-neo6m", "id": "chip1", "top": -18.18, "left": 302.4, "attrs": {} }
+    { "type": "gps-neo6m", "id": "chip1", "top": -18.18, "left": 302.4, "attrs": {} }
   ],
   "connections": [
     [ "mega:50", "sd1:DO", "green", [ "v0" ] ],
