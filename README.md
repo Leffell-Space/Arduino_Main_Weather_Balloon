@@ -54,10 +54,10 @@ This project is in the process of being assembled. Code from other components ca
 
 ## Leffell Space Program Members
 - Raz Idan (Instructor)
-- Spencer Kolodny (JR)
-- Ari Bellman (SO)
-- Daniel Lerner (SO)
-- Ari Messinger (SO)
-- Oren Podietz (SO)
+- Spencer Kolodny (26)
+- Ari Bellman (27)
+- Daniel Lerner (27)
+- Ari Messinger (27)
+- Oren Podietz (27)
   
 ## [Add finished project documentation]
