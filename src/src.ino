@@ -58,9 +58,15 @@ float humidity = 0;
 float insideCelsius = 0.0;
 float outsideCelsius = 0.0;
 
-//calibrated empirically
+// Temperature calibration offsets (calibrated empirically)
 float insideOffset = -0.2;
 float outsideOffset = -1.0;
+
+// Sensor validation thresholds
+const float TEMP_MIN = -90.0;                    // Minimum valid temperature (°C) for high altitude
+const float TEMP_MAX = 60.0;                     // Maximum valid temperature (°C)
+const float LANDING_ALTITUDE_THRESHOLD = 300.0;  // Altitude threshold (m) for landing detection
+const unsigned long BUZZER_DELAY = 30000;        // Minimum runtime (ms) before buzzer activation
 
 double latitude = 0.0;
 double longitude = 0.0;
@@ -211,20 +217,18 @@ void loop() {
     sensors_out.requestTemperatures();
     outsideCelsius = sensors_out.getTempCByIndex(0) + outsideOffset;
 
-    // Validate temperature readings (reasonable range: -90°C to 60°C for high altitude)
-    if (insideCelsius < -90.0 || insideCelsius > 60.0) {
+    // Validate temperature readings (reasonable range for high altitude)
+    if (insideCelsius < TEMP_MIN || insideCelsius > TEMP_MAX) {
       insideCelsius = 0.0;  // Reset to default if invalid
     }
-    if (outsideCelsius < -90.0 || outsideCelsius > 60.0) {
+    if (outsideCelsius < TEMP_MIN || outsideCelsius > TEMP_MAX) {
       outsideCelsius = 0.0;  // Reset to default if invalid
     }
 #endif
 
 #if enable_buzzer
     // Only activate buzzer if we have valid altitude data and sufficient runtime
-    // 30000ms = 30 seconds minimum runtime before buzzer can activate
-    // 300m altitude threshold for landing detection
-    if (gps.altitude.isValid() && altitude < 300 && currentMillis > 30000) {
+    if (gps.altitude.isValid() && altitude < LANDING_ALTITUDE_THRESHOLD && currentMillis > BUZZER_DELAY) {
       digitalWrite(BUZZER_PIN, HIGH);
     } else {
       digitalWrite(BUZZER_PIN, LOW);
