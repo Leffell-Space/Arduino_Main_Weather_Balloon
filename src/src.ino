@@ -65,6 +65,7 @@ float outsideOffset = -1.0;
 // Sensor validation thresholds
 const float TEMP_MIN = -90.0;                    // Minimum valid temperature (°C) for high altitude
 const float TEMP_MAX = 60.0;                     // Maximum valid temperature (°C)
+const float TEMP_INVALID = -999.0;               // Invalid temperature indicator
 const float LANDING_ALTITUDE_THRESHOLD = 300.0;  // Altitude threshold (m) for landing detection
 const unsigned long BUZZER_DELAY = 30000;        // Minimum runtime (ms) before buzzer activation
 
@@ -77,7 +78,9 @@ int minutes = 0;
 int seconds = 0;
 unsigned long previousMillis = 0;
 unsigned long lastGPSRead = 0;
-bool sdCardAvailable = false;  // Track SD card status
+bool sdCardAvailable = false;                   // Track SD card status
+unsigned long lastSDRetry = 0;                  // Last time we tried to reconnect to SD card
+const unsigned long SD_RETRY_INTERVAL = 60000;  // Retry SD card every 60 seconds
 
 void setup() {
   Serial.begin(9600);
@@ -219,10 +222,10 @@ void loop() {
 
     // Validate temperature readings (reasonable range for high altitude)
     if (insideCelsius < TEMP_MIN || insideCelsius > TEMP_MAX) {
-      insideCelsius = 0.0;  // Reset to default if invalid
+      insideCelsius = TEMP_INVALID;  // Use invalid indicator for bad readings
     }
     if (outsideCelsius < TEMP_MIN || outsideCelsius > TEMP_MAX) {
-      outsideCelsius = 0.0;  // Reset to default if invalid
+      outsideCelsius = TEMP_INVALID;  // Use invalid indicator for bad readings
     }
 #endif
 
@@ -253,7 +256,8 @@ void loop() {
 #if debug
         Serial.println("Error opening file for writing");
 #endif
-        sdCardAvailable = false;  // Mark SD as unavailable
+        sdCardAvailable = false;      // Mark SD as unavailable
+        lastSDRetry = currentMillis;  // Start retry timer
       }
     }
 #if debug
@@ -262,4 +266,21 @@ void loop() {
     }
 #endif
   }
-}
+
+  // Periodically retry SD card connection if it's unavailable
+  if (!sdCardAvailable && (currentMillis - lastSDRetry >= SD_RETRY_INTERVAL)) {
+    lastSDRetry = currentMillis;
+#if debug
+    Serial.println("Attempting to reconnect to SD card...");
+#endif
+    if (SD.begin(53)) {
+      myFile = SD.open(dataFile, FILE_WRITE);
+      if (myFile) {
+        sdCardAvailable = true;
+        myFile.close();
+#if debug
+        Serial.println("SD card reconnected successfully");
+#endif
+      }
+    }
+  }
