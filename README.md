@@ -24,18 +24,13 @@ This project is in the process of being assembled. Code from other components ca
 |MS5611-01BA03 Barometric Pressure Sensor| A4,A5 (0x76,77)|2|
 |I2C Ozone Sensor| A4,A5 (0x73) |5|
 |Sensirion I2C SCD30 - Carbon Dioxide Sensor|A4, A5 (0x61)|3|
-|MG-811 Analog CO2 Gas Sensor| A0 |6|
 |Buzzer| 4 |7.7|
 |Insta360 ONE X2 Camera|N/A|223|
 |TalentCell Lithium ion battery pack|Arduino and Camera|388|
 |Apple Airtag | N/A (Stand alone)|11|
 
 - Arduino Mega needs to be used as Arduino UNO does not have enough storage space
-- Wireless transmitter [Add more info]
-- SD Card [Also add more info]
-- Data that will be received will be displayed with these column headers
-- Time, Latitude, Longitude, Altitude, HDOP, Inside Temperature, Outside Temperature, Pressure, Ozone Concentration, CO2 Concentration, Temperature, Humidity
-- [Add other components]
+- Data is logged to an SD card with the following column headers: Time, Latitude, Longitude, Altitude, HDOP, Inside Temperature, Outside Temperature, Pressure, Ozone Concentration, CO2 Concentration, Temperature, Humidity
 
 ## Installation
 
@@ -44,13 +39,23 @@ This project is in the process of being assembled. Code from other components ca
    git clone https://github.com/Leffell-Space/Arduino_Main_Weather_Balloon.git
    ```
 2. Open the project in the Arduino IDE
-3. Install the necessary libraries
+3. Install the necessary libraries through the Arduino Library Manager or manually:
+   - SD (built-in)
+   - SPI (built-in)
+   - Wire (built-in)
+   - OneWire
+   - DallasTemperature
+   - TinyGPSPlus
+   - MS5611 (from https://github.com/gronat/MS5611.git)
+   - DFRobot_OzoneSensor (from https://github.com/DFRobot/DFRobot_OzoneSensor.git)
+   - SensirionI2cScd30 (from https://github.com/Sensirion/arduino-i2c-scd30.git)
+   - Sensirion Core (from https://github.com/Sensirion/arduino-core.git)
 4. **Configure your build options:**  
    Copy the `config.h.example` file to `config.h` in the same directory. Edit `config.h` to enable or disable features (such as sensors and debug output) by changing the values from `1` (enabled) to `0` (disabled) as needed for your hardware setup.
    ```bash
    cp src/config.h.example src/config.h
    ```
-5. Upload the code to your Arduino board
+5. Upload the code to your Arduino Mega board
 
 ## Leffell Space Program Members
 - Raz Idan (Instructor)

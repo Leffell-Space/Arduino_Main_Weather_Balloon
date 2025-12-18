@@ -71,6 +71,7 @@ int minutes = 0;
 int seconds = 0;
 unsigned long previousMillis = 0;
 unsigned long lastGPSRead = 0;
+bool sdCardAvailable = false;  // Track SD card status
 
 void setup() {
   Serial.begin(9600);
@@ -80,11 +81,13 @@ void setup() {
 #if debug
   if (!SD.begin(53)) {
     Serial.println("SD initialization failed!");
+    sdCardAvailable = false;
   } else {
     Serial.println("SD initialized successfully");
+    sdCardAvailable = true;
   }
 #else
-  SD.begin(53);
+  sdCardAvailable = SD.begin(53);
 #endif
 
 #if debug
@@ -105,6 +108,7 @@ void setup() {
     Serial.println("Header written to file");
 #endif
   } else {
+    sdCardAvailable = false;  // Mark SD as unavailable if file can't be opened
 #if debug
     Serial.println("Error opening file");
 #endif
@@ -206,10 +210,21 @@ void loop() {
     insideCelsius = sensors_in.getTempCByIndex(0) + insideOffset;
     sensors_out.requestTemperatures();
     outsideCelsius = sensors_out.getTempCByIndex(0) + outsideOffset;
+
+    // Validate temperature readings (reasonable range: -90°C to 60°C for high altitude)
+    if (insideCelsius < -90.0 || insideCelsius > 60.0) {
+      insideCelsius = 0.0;  // Reset to default if invalid
+    }
+    if (outsideCelsius < -90.0 || outsideCelsius > 60.0) {
+      outsideCelsius = 0.0;  // Reset to default if invalid
+    }
 #endif
 
 #if enable_buzzer
-    if (altitude < 300 && currentMillis > 30000) {
+    // Only activate buzzer if we have valid altitude data and sufficient runtime
+    // 30000ms = 30 seconds minimum runtime before buzzer can activate
+    // 300m altitude threshold for landing detection
+    if (gps.altitude.isValid() && altitude < 300 && currentMillis > 30000) {
       digitalWrite(BUZZER_PIN, HIGH);
     } else {
       digitalWrite(BUZZER_PIN, LOW);
@@ -221,17 +236,26 @@ void loop() {
 
     String dataStr = timeStr + "," + String(latitude, 6) + "," + String(longitude, 6) + "," + String(altitude) + "," + String(hdop) + "," + String(insideCelsius) + "," + String(outsideCelsius) + "," + String(pressure) + "," + String(ozoneConcentration) + "," + String(co2Concentration) + "," + String(temperature) + "," + String(humidity);
 
-    myFile = SD.open(dataFile, FILE_WRITE);
-    if (myFile) {
+    // Only attempt to write if SD card was successfully initialized
+    if (sdCardAvailable) {
+      myFile = SD.open(dataFile, FILE_WRITE);
+      if (myFile) {
 #if debug
-      Serial.println("Writing to SD: " + dataStr);
+        Serial.println("Writing to SD: " + dataStr);
 #endif
-      myFile.println(dataStr);
-      myFile.close();
-    } else {
+        myFile.println(dataStr);
+        myFile.close();
+      } else {
 #if debug
-      Serial.println("Error opening file for writing");
+        Serial.println("Error opening file for writing");
 #endif
+        sdCardAvailable = false;  // Mark SD as unavailable
+      }
     }
+#if debug
+    else {
+      Serial.println("SD card not available, data not written: " + dataStr);
+    }
+#endif
   }
 }
