@@ -58,10 +58,6 @@ This project is in the process of being assembled. Code from other components ca
    ```
 5. Upload the code to your Arduino Mega board
 
-## Data Logging
-
-All sensor data is logged to the SD card with timestamps in the format: `Time,Lat,Long,Alt,HDOP,Inside Temp,Outside Temp,Pressure,Ozone,CO2,Temperature,Humidity`
-
 ## Leffell Space Program Members
 - Raz Idan (Instructor)
 - Spencer Kolodny (26)
