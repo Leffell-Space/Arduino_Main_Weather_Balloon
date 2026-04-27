@@ -39,6 +39,13 @@ SensirionI2cScd30 sensor;
 
 #if enable_buzzer
 #define BUZZER_PIN 4  // Define buzzer pin
+#if wokwi_test
+#define BUZZER_RUN_THRESHOLD 30000UL        // 30 seconds for testing
+#define ALTITUDE_STALE_THRESHOLD 5000UL     // 5 seconds for testing
+#else
+#define BUZZER_RUN_THRESHOLD 1800000UL      // 30 minutes
+#define ALTITUDE_STALE_THRESHOLD 300000UL   // 5 minutes without a valid altitude update
+#endif
 #endif
 
 #if enable_Ozone
@@ -71,6 +78,7 @@ int minutes = 0;
 int seconds = 0;
 unsigned long previousMillis = 0;
 unsigned long lastGPSRead = 0;
+unsigned long lastValidAltitude = 0;
 
 void setup() {
   Serial.begin(9600);
@@ -171,6 +179,7 @@ void loop() {
       longitude = gps.location.lng();
       altitude = gps.altitude.meters();  // Altitude in meters
       hdop = gps.hdop.hdop();            // Horizontal dilution of precision
+      lastValidAltitude = currentMillis;
 
       // Get the timestamp (in hours, minutes, seconds)
       hours = gps.time.hour();
@@ -209,7 +218,8 @@ void loop() {
 #endif
 
 #if enable_buzzer
-    if (altitude < 300 && currentMillis > 30000) {
+    bool altitudeStale = (lastValidAltitude == 0) || (currentMillis - lastValidAltitude > ALTITUDE_STALE_THRESHOLD);
+    if (currentMillis > BUZZER_RUN_THRESHOLD && (altitudeStale || altitude < buzzerAltitude)) {
       digitalWrite(BUZZER_PIN, HIGH);
     } else {
       digitalWrite(BUZZER_PIN, LOW);
