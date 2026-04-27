@@ -39,13 +39,16 @@ SensirionI2cScd30 sensor;
 
 #if enable_buzzer
 #define BUZZER_PIN 4  // Define buzzer pin
-  #if wokwi_test
-    #define BUZZER_RUN_THRESHOLD 30000UL        // 30 seconds for testing
-    #define ALTITUDE_STALE_THRESHOLD 5000UL     // 5 seconds for testing
-  #else
-    #define BUZZER_RUN_THRESHOLD 1800000UL      // 30 minutes
-    #define ALTITUDE_STALE_THRESHOLD 300000UL   // 5 minutes without a valid altitude update
-  #endif
+#if wokwi_test
+#define BUZZER_RUN_THRESHOLD 30000UL     // 30 seconds for testing
+#define ALTITUDE_STALE_THRESHOLD 5000UL  // 5 seconds for testing
+#else
+#define BUZZER_RUN_THRESHOLD 1800000UL     // 30 minutes
+#define ALTITUDE_STALE_THRESHOLD 300000UL  // 5 minutes without a valid altitude update
+#endif
+#ifndef buzzerAltitude
+#define buzzerAltitude 300  // Default altitude in meters below which the buzzer will ring
+#endif
 #endif
 
 #if enable_Ozone
