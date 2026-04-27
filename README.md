@@ -16,7 +16,7 @@ This project is in the process of being assembled. Code from other components ca
 | Component | Pin(s) | Mass(g) |         
 | - | - | - |
 |Weather Balloon| N/A|200|
-|48-inch Parachute| N/A|N/A|
+|48-inch Parachute| N/A|148|
 |15in x 13in x 10in Styrofoam Box (Stores Components)| N/A|366|
 |SD Card Reader|MISO - 50, MOSI - 51, CLK - 52, CS - 53|4.5|
 |DS18B20 Internal Temperature Sensor (Green Tape)| 5 | 9.1 |
