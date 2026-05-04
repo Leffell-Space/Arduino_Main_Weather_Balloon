@@ -49,7 +49,7 @@ DFRobot_OzoneSensor Ozone;
 MS5611 baro;
 #endif
 
-int32_t pressure = 0;
+float pressure = 0;
 int16_t ozoneConcentration = 0;
 float filtered = 0;
 float co2Concentration = 0;
@@ -190,6 +190,7 @@ void loop() {
 
 // Read pressure
 #if enable_MS5611
+    baro.read();
     pressure = baro.getPressure();
 #endif
 
