@@ -10,7 +10,7 @@ on:
         - wokwi.toml
         - serial.test.yaml
         - diagram.json
-        
+        - wokwi-test.yml
 
 jobs:
   wokwi-test:
