@@ -114,7 +114,6 @@ void setup() {
   Wire.begin();
 
 #if enable_MS5611
-  baro = MS5611();
   baro.begin();
 #endif
 
@@ -190,6 +189,7 @@ void loop() {
 
 // Read pressure
 #if enable_MS5611
+    baro.read();
     pressure = baro.getPressure();
 #endif
 

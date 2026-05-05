@@ -19,7 +19,7 @@ from pathlib import Path
 NAMED_LIBRARIES = ['OneWire', 'DallasTemperature', 'TinyGPSPlus']
 
 # Libraries to install by cloning from git
-URL_LIBRARIES = ['https://github.com/Sensirion/arduino-i2c-scd30.git', 'https://github.com/Sensirion/arduino-core.git', 'https://github.com/gronat/MS5611.git', 'https://github.com/DFRobot/DFRobot_OzoneSensor.git']
+URL_LIBRARIES = ['https://github.com/Sensirion/arduino-i2c-scd30.git', 'https://github.com/Sensirion/arduino-core.git', 'https://github.com/RobTillaart/MS5611.git', 'https://github.com/DFRobot/DFRobot_OzoneSensor.git']
 
 
 def get_arduino_libraries_path():
