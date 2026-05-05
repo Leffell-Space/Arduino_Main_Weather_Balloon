@@ -40,17 +40,16 @@ This project is in the process of being assembled. Code from other components ca
    git clone https://github.com/Leffell-Space/Arduino_Main_Weather_Balloon.git
    ```
 2. Open the project in the Arduino IDE
-3. Install the necessary libraries through the Arduino Library Manager or manually:
-   - SD (built-in)
-   - SPI (built-in)
-   - Wire (built-in)
-   - OneWire
-   - DallasTemperature
-   - TinyGPSPlus
-   - MS5611 (from https://github.com/gronat/MS5611.git)
-   - DFRobot_OzoneSensor (from https://github.com/DFRobot/DFRobot_OzoneSensor.git)
-   - SensirionI2cScd30 (from https://github.com/Sensirion/arduino-i2c-scd30.git)
-   - Sensirion Core (from https://github.com/Sensirion/arduino-core.git)
+3. Install the required libraries using the provided script:
+   ```bash
+   python install_libraries.py
+   ```
+   This will automatically install the following libraries:
+   - **Via Arduino Library Manager / arduino-cli:** OneWire, DallasTemperature, TinyGPSPlus
+   - **Via git clone:** MS5611, DFRobot_OzoneSensor, SensirionI2cScd30, Sensirion Core
+   - **Built-in (no installation needed):** SD, SPI, Wire
+
+   > **Note:** If `arduino-cli` is not installed, the script will print instructions for manually installing the named libraries through the Arduino Library Manager. You can also specify a custom libraries path with `python install_libraries.py --path /your/arduino/libraries`.
 4. **Configure your build options:**  
    Copy the `config.h.example` file to `config.h` in the same directory. Edit `config.h` to enable or disable features (such as sensors and debug output) by changing the values from `1` (enabled) to `0` (disabled) as needed for your hardware setup.
    ```bash
