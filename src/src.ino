@@ -49,7 +49,7 @@ DFRobot_OzoneSensor Ozone;
 MS5611 baro;
 #endif
 
-int32_t pressure = 0;
+float pressure = 0;
 int16_t ozoneConcentration = 0;
 float filtered = 0;
 float co2Concentration = 0;
@@ -58,16 +58,9 @@ float humidity = 0;
 float insideCelsius = 0.0;
 float outsideCelsius = 0.0;
 
-// Temperature calibration offsets (calibrated empirically)
+//calibrated empirically
 float insideOffset = -0.2;
 float outsideOffset = -1.0;
-
-// Sensor validation thresholds
-const float TEMP_MIN = -90.0;                    // Minimum valid temperature (°C) for high altitude
-const float TEMP_MAX = 60.0;                     // Maximum valid temperature (°C)
-const float TEMP_INVALID = -999.0;               // Invalid temperature indicator
-const float LANDING_ALTITUDE_THRESHOLD = 300.0;  // Altitude threshold (m) for landing detection
-const unsigned long BUZZER_DELAY = 30000;        // Minimum runtime (ms) before buzzer activation
 
 double latitude = 0.0;
 double longitude = 0.0;
@@ -78,9 +71,6 @@ int minutes = 0;
 int seconds = 0;
 unsigned long previousMillis = 0;
 unsigned long lastGPSRead = 0;
-bool sdCardAvailable = false;                   // Track SD card status
-unsigned long lastSDRetry = 0;                  // Last time we tried to reconnect to SD card
-const unsigned long SD_RETRY_INTERVAL = 60000;  // Retry SD card every 60 seconds
 
 void setup() {
   Serial.begin(9600);
@@ -90,13 +80,11 @@ void setup() {
 #if debug
   if (!SD.begin(53)) {
     Serial.println("SD initialization failed!");
-    sdCardAvailable = false;
   } else {
     Serial.println("SD initialized successfully");
-    sdCardAvailable = true;
   }
 #else
-  sdCardAvailable = SD.begin(53);
+  SD.begin(53);
 #endif
 
 #if debug
@@ -117,7 +105,6 @@ void setup() {
     Serial.println("Header written to file");
 #endif
   } else {
-    sdCardAvailable = false;  // Mark SD as unavailable if file can't be opened
 #if debug
     Serial.println("Error opening file");
 #endif
@@ -203,6 +190,7 @@ void loop() {
 
 // Read pressure
 #if enable_MS5611
+    baro.read();
     pressure = baro.getPressure();
 #endif
 
@@ -219,19 +207,10 @@ void loop() {
     insideCelsius = sensors_in.getTempCByIndex(0) + insideOffset;
     sensors_out.requestTemperatures();
     outsideCelsius = sensors_out.getTempCByIndex(0) + outsideOffset;
-
-    // Validate temperature readings (reasonable range for high altitude)
-    if (insideCelsius < TEMP_MIN || insideCelsius > TEMP_MAX) {
-      insideCelsius = TEMP_INVALID;  // Use invalid indicator for bad readings
-    }
-    if (outsideCelsius < TEMP_MIN || outsideCelsius > TEMP_MAX) {
-      outsideCelsius = TEMP_INVALID;  // Use invalid indicator for bad readings
-    }
 #endif
 
 #if enable_buzzer
-    // Only activate buzzer if we have valid altitude data and sufficient runtime
-    if (gps.altitude.isValid() && altitude < LANDING_ALTITUDE_THRESHOLD && currentMillis > BUZZER_DELAY) {
+    if (altitude < 300 && currentMillis > 30000) {
       digitalWrite(BUZZER_PIN, HIGH);
     } else {
       digitalWrite(BUZZER_PIN, LOW);
@@ -243,45 +222,17 @@ void loop() {
 
     String dataStr = timeStr + "," + String(latitude, 6) + "," + String(longitude, 6) + "," + String(altitude) + "," + String(hdop) + "," + String(insideCelsius) + "," + String(outsideCelsius) + "," + String(pressure) + "," + String(ozoneConcentration) + "," + String(co2Concentration) + "," + String(temperature) + "," + String(humidity);
 
-    // Only attempt to write if SD card was successfully initialized
-    if (sdCardAvailable) {
-      myFile = SD.open(dataFile, FILE_WRITE);
-      if (myFile) {
+    myFile = SD.open(dataFile, FILE_WRITE);
+    if (myFile) {
 #if debug
-        Serial.println("Writing to SD: " + dataStr);
+      Serial.println("Writing to SD: " + dataStr);
 #endif
-        myFile.println(dataStr);
-        myFile.close();
-      } else {
+      myFile.println(dataStr);
+      myFile.close();
+    } else {
 #if debug
-        Serial.println("Error opening file for writing");
+      Serial.println("Error opening file for writing");
 #endif
-        sdCardAvailable = false;      // Mark SD as unavailable
-        lastSDRetry = currentMillis;  // Start retry timer
-      }
-    }
-#if debug
-    else {
-      Serial.println("SD card not available, data not written: " + dataStr);
-    }
-#endif
-  }
-
-  // Periodically retry SD card connection if it's unavailable
-  if (!sdCardAvailable && (currentMillis - lastSDRetry >= SD_RETRY_INTERVAL)) {
-    lastSDRetry = currentMillis;
-#if debug
-    Serial.println("Attempting to reconnect to SD card...");
-#endif
-    if (SD.begin(53)) {
-      myFile = SD.open(dataFile, FILE_WRITE);
-      if (myFile) {
-        sdCardAvailable = true;
-        myFile.close();
-#if debug
-        Serial.println("SD card reconnected successfully");
-#endif
-      }
     }
   }
 }
