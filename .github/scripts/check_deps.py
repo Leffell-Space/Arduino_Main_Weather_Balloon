@@ -63,16 +63,22 @@ def parse_readme_libs():
     """
     content = README.read_text()
     match = re.search(
-        r"Install the necessary libraries[^\n]*\n((?:   - [^\n]*\n)+)",
+        r"Install the necessary libraries[^\n]*\n((?:^[ \t]*[-*] [^\n]*\n)+)",
         content,
+        re.MULTILINE,
     )
     if not match:
-        return [], [], []
+        print(
+            "ERROR: Could not find the 'Install the necessary libraries' section "
+            "in README.md",
+            file=sys.stderr,
+        )
+        sys.exit(1)
 
     named, builtin, urls = [], [], []
     for line in match.group(1).splitlines():
         stripped = line.strip()
-        if not stripped.startswith("- "):
+        if not (stripped.startswith("- ") or stripped.startswith("* ")):
             continue
         entry = stripped[2:]
         url_match = re.search(r"\(from (https://\S+)\)", entry)
@@ -97,7 +103,7 @@ def libs_match(wf_named, wf_urls, readme_named, readme_builtin, readme_urls):
     # All names the workflow declares should appear somewhere in README
     # (either as a regular entry or as "(built-in)").  SPI/Wire live only in
     # README and are fine to ignore on the workflow side.
-    readme_all_names = set(readme_named) | set(readme_builtin) - set(TRULY_BUILTIN)
+    readme_all_names = (set(readme_named) | set(readme_builtin)) - set(TRULY_BUILTIN)
     if set(wf_named) != readme_all_names:
         return False
     if set(wf_urls) != set(readme_urls):
@@ -148,11 +154,17 @@ def update_readme(wf_named, wf_urls):
     new_lines = _build_readme_lib_lines(wf_named, wf_urls)
     new_block = "\n".join(new_lines) + "\n"
 
-    new_content = re.sub(
+    new_content, substitutions = re.subn(
         r"(Install the necessary libraries[^\n]*\n)((?:   - [^\n]*\n)+)",
         lambda m: m.group(1) + new_block,
         content,
     )
+    if substitutions == 0:
+        print(
+            "ERROR: Could not find the README library list block to update.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
     if new_content == content:
         return False
     README.write_text(new_content)
@@ -233,27 +245,35 @@ def generate_install_script(wf_named, wf_urls):
         "",
         "",
         "def install_named_libraries(libs_path):",
-        '    """Install named libraries via arduino-cli, or print manual instructions."""',
+        '    """Install named libraries via arduino-cli, or print manual instructions.',
+        "",
+        "    Note: arduino-cli installs to its own configured library path.",
+        "    The --path option does not affect where named libraries are placed.",
+        '    """',
         "    if not NAMED_LIBRARIES:",
-        "        return",
+        "        return []",
         '    print("\\nInstalling named libraries...")',
+        "    failed = []",
         "    if _has_arduino_cli():",
         "        for name in NAMED_LIBRARIES:",
         "            print(f\"  Installing {name} via arduino-cli...\")",
-        '            _run(["arduino-cli", "lib", "install", name])',
+        '            if not _run(["arduino-cli", "lib", "install", name]):',
+        "                failed.append(name)",
         "    else:",
         '        print("  arduino-cli not found.")',
         '        print("  Please install the following via the Arduino Library Manager:")',
         "        for name in NAMED_LIBRARIES:",
         "            print(f\"    - {name}\")",
+        "    return failed",
         "",
         "",
         "def install_url_libraries(libs_path):",
         '    """Clone or update git-based libraries into the Arduino libraries folder."""',
         "    if not URL_LIBRARIES:",
-        "        return",
+        "        return []",
         "    libs_path.mkdir(parents=True, exist_ok=True)",
         "    print(f\"\\nInstalling URL-based libraries into: {libs_path}\")",
+        "    failed = []",
         "    for url in URL_LIBRARIES:",
         '        repo_name = url.rstrip("/").split("/")[-1]',
         '        if repo_name.endswith(".git"):',
@@ -261,10 +281,13 @@ def generate_install_script(wf_named, wf_urls):
         "        dest = libs_path / repo_name",
         "        if dest.exists():",
         "            print(f\"  Updating {repo_name}...\")",
-        '            _run(["git", "-C", str(dest), "pull"])',
+        '            if not _run(["git", "-C", str(dest), "pull"]):',
+        "                failed.append(url)",
         "        else:",
         "            print(f\"  Cloning {repo_name} from {url}...\")",
-        '            _run(["git", "clone", url, str(dest)])',
+        '            if not _run(["git", "clone", url, str(dest)]):',
+        "                failed.append(url)",
+        "    return failed",
         "",
         "",
         "def main():",
@@ -275,16 +298,22 @@ def generate_install_script(wf_named, wf_urls):
         '        "--path",',
         "        type=Path,",
         "        default=None,",
-        '        help="Arduino libraries folder (default: auto-detected per OS)",',
+        '        help="Arduino libraries folder for git-cloned URL libraries (default: auto-detected per OS). Named libraries are installed by arduino-cli to its own configured path.",',
         "    )",
         "    args = parser.parse_args()",
         "",
         "    libs_path = args.path or get_arduino_libraries_path()",
         "    print(f\"Arduino libraries directory: {libs_path}\")",
         "",
-        "    install_named_libraries(libs_path)",
-        "    install_url_libraries(libs_path)",
+        "    failed = []",
+        "    failed.extend(install_named_libraries(libs_path))",
+        "    failed.extend(install_url_libraries(libs_path))",
         "",
+        "    if failed:",
+        "        print(f\"\\nERROR: The following libraries could not be installed:\", file=sys.stderr)",
+        "        for item in failed:",
+        "            print(f\"  - {item}\", file=sys.stderr)",
+        "        sys.exit(1)",
         '    print("\\nInstallation complete.")',
         "",
         "",

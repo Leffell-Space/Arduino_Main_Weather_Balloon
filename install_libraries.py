@@ -54,27 +54,35 @@ def _has_arduino_cli():
 
 
 def install_named_libraries(libs_path):
-    """Install named libraries via arduino-cli, or print manual instructions."""
+    """Install named libraries via arduino-cli, or print manual instructions.
+
+    Note: arduino-cli installs to its own configured library path.
+    The --path option does not affect where named libraries are placed.
+    """
     if not NAMED_LIBRARIES:
-        return
+        return []
     print("\nInstalling named libraries...")
+    failed = []
     if _has_arduino_cli():
         for name in NAMED_LIBRARIES:
             print(f"  Installing {name} via arduino-cli...")
-            _run(["arduino-cli", "lib", "install", name])
+            if not _run(["arduino-cli", "lib", "install", name]):
+                failed.append(name)
     else:
         print("  arduino-cli not found.")
         print("  Please install the following via the Arduino Library Manager:")
         for name in NAMED_LIBRARIES:
             print(f"    - {name}")
+    return failed
 
 
 def install_url_libraries(libs_path):
     """Clone or update git-based libraries into the Arduino libraries folder."""
     if not URL_LIBRARIES:
-        return
+        return []
     libs_path.mkdir(parents=True, exist_ok=True)
     print(f"\nInstalling URL-based libraries into: {libs_path}")
+    failed = []
     for url in URL_LIBRARIES:
         repo_name = url.rstrip("/").split("/")[-1]
         if repo_name.endswith(".git"):
@@ -82,10 +90,13 @@ def install_url_libraries(libs_path):
         dest = libs_path / repo_name
         if dest.exists():
             print(f"  Updating {repo_name}...")
-            _run(["git", "-C", str(dest), "pull"])
+            if not _run(["git", "-C", str(dest), "pull"]):
+                failed.append(url)
         else:
             print(f"  Cloning {repo_name} from {url}...")
-            _run(["git", "clone", url, str(dest)])
+            if not _run(["git", "clone", url, str(dest)]):
+                failed.append(url)
+    return failed
 
 
 def main():
@@ -96,16 +107,22 @@ def main():
         "--path",
         type=Path,
         default=None,
-        help="Arduino libraries folder (default: auto-detected per OS)",
+        help="Arduino libraries folder for git-cloned URL libraries (default: auto-detected per OS). Named libraries are installed by arduino-cli to its own configured path.",
     )
     args = parser.parse_args()
 
     libs_path = args.path or get_arduino_libraries_path()
     print(f"Arduino libraries directory: {libs_path}")
 
-    install_named_libraries(libs_path)
-    install_url_libraries(libs_path)
+    failed = []
+    failed.extend(install_named_libraries(libs_path))
+    failed.extend(install_url_libraries(libs_path))
 
+    if failed:
+        print(f"\nERROR: The following libraries could not be installed:", file=sys.stderr)
+        for item in failed:
+            print(f"  - {item}", file=sys.stderr)
+        sys.exit(1)
     print("\nInstallation complete.")
 
 
