@@ -4,4 +4,5 @@
 #define enable_TempSensors 1  // Set to 1 to enable temperature sensors, 0 to disable
 #define enable_Sensirion 0    // Set to 1 to enable Sensirion SCD30 CO2 sensor, 0 to disable
 #define enable_buzzer 1       // Set to 1 to enable buzzer, 0 to disable
+#define buzzerAltitude 300    // Altitude in meters below which the buzzer will ring
 #define wokwi_test 1          // Set to 1 when testing with Wokwi, 0 to disable
