@@ -124,10 +124,9 @@ void setup() {
   } else {
     Serial.println("Ozone sensor working");
   }
-#elif enable_Ozone
-  Ozone.begin(Ozone_IICAddress);
 #endif
 #if enable_Ozone
+  Ozone.begin(Ozone_IICAddress);
   Ozone.setModes(MEASURE_MODE_PASSIVE);
 #endif
 
