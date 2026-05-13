@@ -36,3 +36,5 @@ c_cpp_properties.json
 settings.json
 config.h
 build/
+__pycache__/
+*.pyc

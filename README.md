@@ -51,6 +51,16 @@ This project is in the process of being assembled. Code from other components ca
    - DFRobot_OzoneSensor (from https://github.com/DFRobot/DFRobot_OzoneSensor.git)
    - SensirionI2cScd30 (from https://github.com/Sensirion/arduino-i2c-scd30.git)
    - Sensirion Core (from https://github.com/Sensirion/arduino-core.git)
+
+   **Quick install (recommended):** Run the included script to install all non-built-in libraries automatically. It uses [`arduino-cli`](https://arduino.github.io/arduino-cli/) for named libraries and `git` for URL-based ones, detecting your Arduino libraries folder automatically on Windows, macOS, and Linux:
+   ```bash
+   python install_libraries.py
+   ```
+   You can also specify a custom libraries path:
+   ```bash
+   python install_libraries.py --path /path/to/Arduino/libraries
+   ```
+   > **Note:** `SD`, `SPI`, and `Wire` are bundled with the Arduino IDE and do not need to be installed separately.
 4. **Configure your build options:**  
    Copy the `config.h.example` file to `config.h` in the same directory. Edit `config.h` to enable or disable features (such as sensors and debug output) by changing the values from `1` (enabled) to `0` (disabled) as needed for your hardware setup.
    ```bash
