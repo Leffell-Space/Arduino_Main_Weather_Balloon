@@ -8,7 +8,7 @@
 #include "DFRobot_OzoneSensor.h"
 #include <SensirionI2cScd30.h>
 #include "config.h"
-
+#include <math.h>
 TinyGPSPlus gps;
 
 #if enable_TempSensors
@@ -57,6 +57,8 @@ float temperature = 0;
 float humidity = 0;
 float insideCelsius = 0.0;
 float outsideCelsius = 0.0;
+
+#define OZONE_STALE_VALUE INT16_MIN
 
 //calibrated empirically
 float insideOffset = -0.2;
@@ -233,5 +235,12 @@ void loop() {
       Serial.println("Error opening file for writing");
 #endif
     }
+    pressure = NAN;
+    co2Concentration = NAN;
+    temperature = NAN;
+    humidity = NAN;
+    insideCelsius = NAN;
+    outsideCelsius = NAN;
+    ozoneConcentration = OZONE_STALE_VALUE;
   }
 }
