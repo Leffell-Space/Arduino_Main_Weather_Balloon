@@ -32,10 +32,6 @@ String dataFile = "data.csv";
 #define Ozone_IICAddress OZONE_ADDRESS_3
 #endif
 
-#if enable_Sensirion
-SensirionI2cScd30 sensor;
-#endif
-
 #if enable_buzzer
 #define BUZZER_PIN 4  // Define buzzer pin
 #endif
@@ -138,12 +134,6 @@ void setup() {
   pinMode(BUZZER_PIN, OUTPUT);
 #endif
 
-#if enable_Sensirion
-  sensor.begin(Wire, SCD30_I2C_ADDR_61);
-  sensor.startPeriodicMeasurement(0);
-#endif
-}
-
 void loop() {
   // Process GPS data
   unsigned long currentMillis = millis();
@@ -193,10 +183,6 @@ void loop() {
 
 #if enable_Ozone
     ozoneConcentration = Ozone.readOzoneData(COLLECT_NUMBER);
-#endif
-
-#if enable_Sensirion
-    sensor.blockingReadMeasurementData( temperature, humidity);
 #endif
 
 #if enable_TempSensors
