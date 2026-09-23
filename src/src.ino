@@ -133,7 +133,7 @@ void setup() {
 #if enable_buzzer
   pinMode(BUZZER_PIN, OUTPUT);
 #endif
-
+}
 void loop() {
   // Process GPS data
   unsigned long currentMillis = millis();
