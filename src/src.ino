@@ -6,7 +6,6 @@
 #include <Wire.h>
 #include <MS5611.h>
 #include "DFRobot_OzoneSensor.h"
-#include <SensirionI2cScd30.h>
 #include "config.h"
 
 TinyGPSPlus gps;
@@ -31,10 +30,6 @@ String dataFile = "data.csv";
 #if enable_Ozone
 #define COLLECT_NUMBER 20  // collect number, the collection range is 1-100
 #define Ozone_IICAddress OZONE_ADDRESS_3
-#endif
-
-#if enable_Sensirion
-SensirionI2cScd30 sensor;
 #endif
 
 #if enable_buzzer
@@ -97,7 +92,7 @@ void setup() {
   // Create/Open file
   myFile = SD.open(dataFile, FILE_WRITE);
   if (myFile) {
-    myFile.println("Time,Lat,Long,Alt,HDOP,Inside Temp,Outside Temp,Pressure,Ozone,CO2,Temperature,Humidity");
+    myFile.println("Time,Lat,Long,Alt,HDOP,Inside Temp,Outside Temp,Pressure,Ozone,Temperature,Humidity");
     myFile.flush();
     myFile.close();
 #if debug
@@ -138,13 +133,7 @@ void setup() {
 #if enable_buzzer
   pinMode(BUZZER_PIN, OUTPUT);
 #endif
-
-#if enable_Sensirion
-  sensor.begin(Wire, SCD30_I2C_ADDR_61);
-  sensor.startPeriodicMeasurement(0);
-#endif
 }
-
 void loop() {
   // Process GPS data
   unsigned long currentMillis = millis();
@@ -196,10 +185,6 @@ void loop() {
     ozoneConcentration = Ozone.readOzoneData(COLLECT_NUMBER);
 #endif
 
-#if enable_Sensirion
-    sensor.blockingReadMeasurementData(co2Concentration, temperature, humidity);
-#endif
-
 #if enable_TempSensors
     sensors_in.requestTemperatures();
     insideCelsius = sensors_in.getTempCByIndex(0) + insideOffset;
@@ -218,7 +203,7 @@ void loop() {
     // Format and write data to SD
     String timeStr = String(hours < 10 ? "0" : "") + String(hours) + ":" + String(minutes < 10 ? "0" : "") + String(minutes) + ":" + String(seconds < 10 ? "0" : "") + String(seconds);
 
-    String dataStr = timeStr + "," + String(latitude, 6) + "," + String(longitude, 6) + "," + String(altitude) + "," + String(hdop) + "," + String(insideCelsius) + "," + String(outsideCelsius) + "," + String(pressure) + "," + String(ozoneConcentration) + "," + String(co2Concentration) + "," + String(temperature) + "," + String(humidity);
+    String dataStr = timeStr + "," + String(latitude, 6) + "," + String(longitude, 6) + "," + String(altitude) + "," + String(hdop) + "," + String(insideCelsius) + "," + String(outsideCelsius) + "," + String(pressure) + "," + String(ozoneConcentration) + "," + String(temperature) + "," + String(humidity);
 
     myFile = SD.open(dataFile, FILE_WRITE);
     if (myFile) {
