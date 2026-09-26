@@ -90,7 +90,7 @@ void setup() {
   // Create/Open file
   myFile = SD.open(dataFile, FILE_WRITE);
   if (myFile) {
-    myFile.println("Time,Lat,Long,Alt,HDOP,Inside Temp,Outside Temp,Pressure,Ozone,Temperature,Humidity");
+    myFile.println("Time,Lat,Long,Alt,HDOP,Inside Temp,Outside Temp,Pressure,Ozone");
     myFile.flush();
     myFile.close();
 #if debug
