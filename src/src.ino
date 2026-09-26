@@ -47,8 +47,6 @@ MS5611 baro;
 float pressure = 0;
 int16_t ozoneConcentration = 0;
 float co2Concentration = 0;
-float temperature = 0;
-float humidity = 0;
 float insideCelsius = 0.0;
 float outsideCelsius = 0.0;
 
