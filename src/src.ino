@@ -46,7 +46,6 @@ MS5611 baro;
 
 float pressure = 0;
 int16_t ozoneConcentration = 0;
-float co2Concentration = 0;
 float insideCelsius = 0.0;
 float outsideCelsius = 0.0;
 
@@ -201,7 +200,7 @@ void loop() {
     // Format and write data to SD
     String timeStr = String(hours < 10 ? "0" : "") + String(hours) + ":" + String(minutes < 10 ? "0" : "") + String(minutes) + ":" + String(seconds < 10 ? "0" : "") + String(seconds);
 
-    String dataStr = timeStr + "," + String(latitude, 6) + "," + String(longitude, 6) + "," + String(altitude) + "," + String(hdop) + "," + String(insideCelsius) + "," + String(outsideCelsius) + "," + String(pressure) + "," + String(ozoneConcentration) + "," + String(temperature) + "," + String(humidity);
+    String dataStr = timeStr + "," + String(latitude, 6) + "," + String(longitude, 6) + "," + String(altitude) + "," + String(hdop) + "," + String(insideCelsius) + "," + String(outsideCelsius) + "," + String(pressure) + "," + String(ozoneConcentration);
 
     myFile = SD.open(dataFile, FILE_WRITE);
     if (myFile) {
