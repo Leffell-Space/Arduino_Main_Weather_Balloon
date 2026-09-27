@@ -4,7 +4,7 @@ This project is in the process of being assembled. Code from other components ca
 
 ## Features
 
-- Collects temperature and pressure data
+- Collects temperature, pressure, and ozone data
 - Tracks balloon location using GPS
 - Records high-quality flight footage with Insta360 camera
 - Logs all sensor data to SD card for post-flight analysis
