@@ -1,5 +1,9 @@
 name: Compile Sketches
 
+permissions:
+  contents: read
+  pull-requests: write
+
 on:
   push:
     branches:
@@ -49,5 +53,4 @@ jobs:
         if: github.event_name == 'pull_request'
         with:
           sketches-reports-source: sketches-reports
-          github-token: ${{ secrets.SPACE_API_KEY_GITHUB_PR }}
-
+          github-token: ${{ github.token }}
