@@ -1,0 +1,302 @@
+#include <SD.h>
+#include <SPI.h>
+#include <OneWire.h>
+#include <DallasTemperature.h>
+#include <TinyGPS++.h>
+#include <Wire.h>
+#include <MS5611.h>
+#include "DFRobot_OzoneSensor.h"
+#include "config.h"
+
+// ==========================================
+// BMI270 REGISTERS AND IMU DEFINITIONS
+// ==========================================
+#define BMI270_I2C_ADDR      0x68   // Standard I2C address for BMI270 (can be 0x69 depending on SDO pin)
+#define REG_FIFO_LENGTH_0    0x24   // Register for FIFO byte count (LSB)
+#define REG_FIFO_LENGTH_1    0x25   // Register for FIFO byte count (MSB)
+#define REG_FIFO_DATA        0x26   // Register to read data out of the FIFO
+
+TinyGPSPlus gps;
+
+#if enable_TempSensors
+#define INSIDE 5   //inside temp
+#define OUTSIDE 6  //outside temp
+
+// Setup a oneWire instance to communicate with any OneWire devices
+OneWire in(INSIDE);
+OneWire out(OUTSIDE);
+
+// Pass our oneWire reference to Dallas Temperature sensor
+DallasTemperature sensors_in(&in);
+DallasTemperature sensors_out(&out);
+#endif
+
+File myFile;
+
+String dataFile = "data.csv";
+
+#if enable_Ozone
+#define COLLECT_NUMBER 20  // collect number, the collection range is 1-100
+#define Ozone_IICAddress OZONE_ADDRESS_3
+#endif
+
+#if enable_buzzer
+#define BUZER_PIN 4  // Define buzzer pin
+#endif
+
+#if enable_Ozone
+DFRobot_OzoneSensor Ozone;
+#endif
+
+#if enable_MS5611
+MS5611 baro;
+#endif
+
+float pressure = 0;
+int16_t ozoneConcentration = 0;
+float insideCelsius = 0.0;
+float outsideCelsius = 0.0;
+
+//calibrated empirically
+float insideOffset = -0.2;
+float outsideOffset = -1.0;
+
+double latitude = 0.0;
+double longitude = 0.0;
+double altitude = 0.0;
+double hdop = 0.0;
+int hours = 0;
+int minutes = 0;
+int seconds = 0;
+unsigned long previousMillis = 0;
+unsigned long lastGPSRead = 0;
+
+void setup() {
+  Serial.begin(9600);
+  Serial1.begin(9600);  // Try different baud rate
+
+// SD Card Initialization
+#if debug
+  if (!SD.begin(53)) {
+    Serial.println("SD initialization failed!");
+  } else {
+    Serial.println("SD initialized successfully");
+  }
+#else
+  SD.begin(53);
+#endif
+
+#if debug
+  if (SD.exists(dataFile)) {
+    Serial.println("File exists");
+  } else {
+    Serial.println("Creating file");
+  }
+#endif
+
+  // Create/Open file
+  myFile = SD.open(dataFile, FILE_WRITE);
+  if (myFile) {
+    // Modified header to include parsed IMU packet placeholders if you log them at the 10s mark
+    myFile.println("Time,Lat,Long,Alt,HDOP,Inside Temp,Outside Temp,Pressure,Ozone");
+    myFile.flush();
+    myFile.close();
+#if debug
+    Serial.println("Header written to file");
+#endif
+  } else {
+#if debug
+    Serial.println("Error opening file");
+#endif
+  }
+
+  // Start barometer
+  Wire.begin();
+
+#if enable_MS5611
+  baro = MS5611();
+  baro.begin();
+#endif
+
+#if debug && enable_Ozone
+  if (!Ozone.begin(Ozone_IICAddress)) {
+    Serial.println("Ozone sensor I2c device number error!");
+  } else {
+    Serial.println("Ozone sensor working");
+  }
+#endif
+#if enable_Ozone
+  Ozone.begin(Ozone_IICAddress);
+  Ozone.setModes(MEASURE_MODE_PASSIVE);
+#endif
+
+// Start up the temperature sensors
+#if enable_TempSensors
+  sensors_in.begin();
+  sensors_out.begin();
+  
+  // CRITICAL FOR IMU FIFO: Set temperature sensors to NON-BLOCKING mode.
+  // By default, requestTemperatures() freezes the Arduino for 750ms per sensor!
+  // This setting allows us to request the temperature, run other loops, and read it later.
+  sensors_in.setWaitForConversion(false);
+  sensors_out.setWaitForConversion(false);
+#endif
+
+#if enable_buzzer
+  pinMode(BUZER_PIN, OUTPUT);
+#endif
+
+  // Note: Ensure your BMI270 initialization (register setup for ODR and enabling FIFO) 
+  // is executed here via your preferred library or custom wire commands.
+}
+
+void loop() {
+  unsigned long currentMillis = millis();
+
+  // ==========================================
+  // HIGH PRIORITY: STREAM & EMPTY BMI270 FIFO
+  // ==========================================
+  // This runs at the absolute top speed of the loop to pull bytes out 
+  // before the 2048-byte buffer fills up.
+  unsigned int imuBytesAvailable = getBMI270FifoLength();
+  
+  if (imuBytesAvailable > 0) {
+    readAndProcessIMUFifo(imuBytesAvailable);
+  }
+
+  // ==========================================
+  // GPS DATA PROCESSING
+  // ==========================================
+  // Continuously feed GPS data
+  while (Serial1.available() > 0) {
+    gps.encode(Serial1.read());
+  }
+
+  // Check GPS status every 2 seconds
+#if wokwi_test
+  unsigned long gps_time = 1000;
+#else
+  unsigned long gps_time = 2000;
+#endif
+  if (currentMillis - lastGPSRead >= gps_time) {
+    lastGPSRead = currentMillis;
+
+    if (gps.location.isValid()) {
+      // Get location information
+      latitude = gps.location.lat();
+      longitude = gps.location.lng();
+      altitude = gps.altitude.meters();  // Altitude in meters
+      hdop = gps.hdop.hdop();            // Horizontal dilution of precision
+
+      // Get the timestamp (in hours, minutes, seconds)
+      hours = gps.time.hour();
+      minutes = gps.time.minute();
+      seconds = gps.time.second();
+    }
+  }
+
+  // ==========================================
+  // SLOW SENSORS & DATA LOGGING (Every 10s)
+  // ==========================================
+#if wokwi_test
+  unsigned long process_time = 1000;
+#else
+  unsigned long process_time = 10000;
+#endif
+  if (currentMillis - previousMillis >= process_time) {
+    previousMillis = currentMillis;
+
+#if enable_MS5611
+    baro.read();
+    pressure = baro.getPressure();
+#endif
+
+#if enable_Ozone
+    ozoneConcentration = Ozone.readOzoneData(COLLECT_NUMBER);
+#endif
+
+#if enable_TempSensors
+    // Because we set setWaitForConversion(false) in setup(), these methods return immediately
+    // with the values calculated from the *previous* 10 seconds, completely avoiding a 1.5-second code freeze.
+    insideCelsius = sensors_in.getTempCByIndex(0) + insideOffset;
+    outsideCelsius = sensors_out.getTempCByIndex(0) + outsideOffset;
+
+    // Send a fresh request to the sensors to start calculating temperature for the NEXT 10-second mark.
+    sensors_in.requestTemperatures();
+    sensors_out.requestTemperatures();
+#endif
+
+#if enable_buzzer
+    if (altitude < 300 && currentMillis > 30000) {
+      digitalWrite(BUZER_PIN, HIGH);
+    } else {
+      digitalWrite(BUZER_PIN, LOW);
+    }
+#endif
+
+    // Format and write data to SD as: Time,Lat,Long,Alt,HDOP,Inside Temp,Outside Temp,Pressure,Ozone
+    String timeStr = String(hours < 10 ? "0" : "") + String(hours) + ":" + String(minutes < 10 ? "0" : "") + String(minutes) + ":" + String(seconds < 10 ? "0" : "") + String(seconds);
+
+    String dataStr = timeStr + "," + String(latitude, 6) + "," + String(longitude, 6) + "," + String(altitude) + "," + String(hdop) + "," + String(insideCelsius) + "," + String(outsideCelsius) + "," + String(pressure) + "," + String(ozoneConcentration);
+
+    myFile = SD.open(dataFile, FILE_WRITE);
+    if (myFile) {
+#if debug
+      Serial.println("Writing to SD: " + dataStr);
+#endif
+      myFile.println(dataStr);
+      myFile.close();
+    } else {
+#if debug
+      Serial.println("Error opening file for writing");
+#endif
+    }
+  }
+}
+
+// ==========================================
+// BMI270 FIFO WORKER FUNCTIONS
+// ==========================================
+
+// Returns the number of bytes currently sitting in the internal 2048-byte buffer
+unsigned int getBMI270FifoLength() {
+  Wire.beginTransmission(BMI270_I2C_ADDR);
+  Wire.write(REG_FIFO_LENGTH_0);
+  if (Wire.endTransmission() != 0) return 0;
+
+  Wire.requestFrom(BMI270_I2C_ADDR, 2);
+  if (Wire.available() == 2) {
+    byte lsb = Wire.read();
+    byte msb = Wire.read();
+    // FIFO length is an 11-bit value split across both registers
+    return ((msb & 0x07) << 8) | lsb;
+  }
+  return 0;
+}
+
+// Dumps the requested bytes out of the FIFO data register instantly
+void readAndProcessIMUFifo(unsigned int byteCount) {
+  // Parse through the bytes in chunks (Wire library has a 32 or 64-byte internal buffer limitation)
+  while (byteCount > 0) {
+    unsigned int chunk = (byteCount > 30) ? 30 : byteCount; // Keep chunk sizes safe for standard I2C buffers
+    
+    Wire.beginTransmission(BMI270_I2C_ADDR);
+    Wire.write(REG_FIFO_DATA);
+    Wire.endTransmission(false);
+
+    Wire.requestFrom(BMI270_I2C_ADDR, chunk);
+    for (unsigned int i = 0; i < chunk; i++) {
+      if (Wire.available()) {
+        byte b = Wire.read();
+        
+        // -------------------------------------------------------------
+        // PROCESS YOUR IMU BYTES HERE
+        // -------------------------------------------------------------
+        // Option A: Pass bytes directly to your parsing algorithm/library
+        // Option B: Stream raw bytes instantly to a secondary fast SD file 
+        // -------------------------------------------------------------
+      }
+    }
+    byteCount -= chunk;
+  }
+}
