@@ -236,9 +236,11 @@ void loop() {
 #endif
     }
     pressure = NAN;
+#if enable_Sensirion
     co2Concentration = NAN;
     temperature = NAN;
     humidity = NAN;
+#endif
     insideCelsius = NAN;
     outsideCelsius = NAN;
     ozoneConcentration = OZONE_STALE_VALUE;
