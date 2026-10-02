@@ -8,6 +8,10 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+  pull-requests: write
+
 jobs:
   compile-sketches:
     runs-on: ubuntu-latest
@@ -49,5 +53,4 @@ jobs:
         if: github.event_name == 'pull_request'
         with:
           sketches-reports-source: sketches-reports
-          github-token: ${{ secrets.SPACE_API_KEY_GITHUB_PR }}
-
+          github-token: ${{ github.token }}
