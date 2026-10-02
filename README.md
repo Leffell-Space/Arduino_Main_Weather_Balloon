@@ -60,15 +60,7 @@ This project is in the process of being assembled. Code from other components ca
 
 The system includes several production-ready features to ensure data integrity:
 
-- **Temperature Validation**: Sensor readings are validated against a reasonable range (-90°C to 60°C). Invalid readings are marked with -999.0 in the data file.
+- **Temperature Validation**: Sensor readings are validated against a reasonable range (-90°C to 60°C). Values are reset to NaN after being written to the microSD card.
 - **SD Card Resilience**: The system tracks SD card availability and automatically attempts to reconnect every 60 seconds if the card becomes unavailable.
 - **GPS Validation**: The buzzer for landing detection only activates when valid GPS altitude data is available.
 - **Data Logging**: All sensor data is logged to the SD card with timestamps in the format: `Time,Lat,Long,Alt,HDOP,Inside Temp,Outside Temp,Pressure,Ozone`
-
-## Leffell Space Program Members
-- Raz Idan (Instructor)
-- Spencer Kolodny (26)
-- Ari Bellman (27)
-- Daniel Lerner (27)
-- Ari Messinger (27)
-- Oren Podietz (27)
