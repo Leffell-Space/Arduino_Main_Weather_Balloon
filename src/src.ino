@@ -43,9 +43,6 @@ String dataFile = "data.csv";
 SensirionI2cScd30 sensor;
 #endif
 
-#if enable_buzzer
-#define BUZZER_PIN 4  // Define buzzer pin
-#endif
 
 #if enable_Ozone
 DFRobot_OzoneSensor Ozone;
@@ -151,9 +148,6 @@ void setup() {
   sensors_out1.begin();
 #endif
 
-#if enable_buzzer
-  pinMode(BUZZER_PIN, OUTPUT);
-#endif
 
 #if enable_Sensirion
   sensor.begin(Wire, SCD30_I2C_ADDR_61);
@@ -228,13 +222,7 @@ void loop() {
     outsideCelsius1 = sensors_out1.getTempCByIndex(0) + outsideOffset1;
 #endif
 
-#if enable_buzzer
-    if (altitude < 300 && currentMillis > 30000) {
-      digitalWrite(BUZZER_PIN, HIGH);
-    } else {
-      digitalWrite(BUZZER_PIN, LOW);
-    }
-#endif
+
 
     // Format and write data to SD
     String timeStr = String(hours < 10 ? "0" : "") + String(hours) + ":" + String(minutes < 10 ? "0" : "") + String(minutes) + ":" + String(seconds < 10 ? "0" : "") + String(seconds);
