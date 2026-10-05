@@ -4,7 +4,7 @@ This project is in the process of being assembled. Code from other components ca
 
 ## Features
 
-- Collects temperature, humidity, and pressure data
+- Collects GPS, temperature, pressure, and ozone telemetry data
 - Tracks balloon location using GPS
 - Records high-quality flight footage with Insta360 camera
 - Logs all sensor data to SD card for post-flight analysis
@@ -31,7 +31,7 @@ This project is in the process of being assembled. Code from other components ca
 |Apple Airtag | N/A (Stand alone)|11|
 
 - Arduino Mega needs to be used as Arduino UNO does not have enough storage space
-- Data is logged to an SD card with the following column headers: Time, Latitude, Longitude, Altitude, HDOP, Inside Temperature, Outside Temperature, Pressure, Ozone Concentration, CO2 Concentration, Temperature, Humidity
+- Data is logged to an SD card with the following column headers: Time, Latitude, Longitude, Altitude, HDOP, Inside Temperature, Outside Temperature, Pressure, Ozone Concentration
 
 ## Installation
 
@@ -49,8 +49,6 @@ This project is in the process of being assembled. Code from other components ca
    - TinyGPSPlus
    - MS5611 (from https://github.com/gronat/MS5611.git)
    - DFRobot_OzoneSensor (from https://github.com/DFRobot/DFRobot_OzoneSensor.git)
-   - SensirionI2cScd30 (from https://github.com/Sensirion/arduino-i2c-scd30.git)
-   - Sensirion Core (from https://github.com/Sensirion/arduino-core.git)
 4. **Configure your build options:**  
    Copy the `config.h.example` file to `config.h` in the same directory. Edit `config.h` to enable or disable features (such as sensors and debug output) by changing the values from `1` (enabled) to `0` (disabled) as needed for your hardware setup.
    ```bash
@@ -62,15 +60,7 @@ This project is in the process of being assembled. Code from other components ca
 
 The system includes several production-ready features to ensure data integrity:
 
-- **Temperature Validation**: Sensor readings are validated against a reasonable range (-90°C to 60°C). Invalid readings are marked with -999.0 in the data file.
+- **Temperature Validation**: Sensor readings are validated against a reasonable range (-90°C to 60°C). Values are reset to NaN after being written to the microSD card.
 - **SD Card Resilience**: The system tracks SD card availability and automatically attempts to reconnect every 60 seconds if the card becomes unavailable.
 - **GPS Validation**: The buzzer for landing detection only activates when valid GPS altitude data is available.
-- **Data Logging**: All sensor data is logged to the SD card with timestamps in the format: `Time,Lat,Long,Alt,HDOP,Inside Temp,Outside Temp,Pressure,Ozone,CO2,Temperature,Humidity`
-
-## Leffell Space Program Members
-- Raz Idan (Instructor)
-- Spencer Kolodny (26)
-- Ari Bellman (27)
-- Daniel Lerner (27)
-- Ari Messinger (27)
-- Oren Podietz (27)
+- **Data Logging**: All sensor data is logged to the SD card with timestamps in the format: `Time,Lat,Long,Alt,HDOP,Inside Temp,Outside Temp,Pressure,Ozone`
