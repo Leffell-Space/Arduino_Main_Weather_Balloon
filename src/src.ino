@@ -61,8 +61,11 @@ float filtered = 0;
 float co2Concentration = 0;
 float temperature = 0;
 float humidity = 0;
-float insideCelsius = 0.0;
-float outsideCelsius = 0.0;
+float insideCelsius0 = 0.0;
+float insideCelsius1 = 0.0;
+float outsideCelsius0 = 0.0;
+float outsideCelsius1 = 0.0;
+
 
 #define OZONE_STALE_VALUE INT16_MIN
 
@@ -108,7 +111,7 @@ void setup() {
   // Create/Open file
   myFile = SD.open(dataFile, FILE_WRITE);
   if (myFile) {
-    myFile.println("Time,Lat,Long,Alt,HDOP,Inside Temp,Outside Temp,Pressure,Ozone,CO2,Temperature,Humidity");
+    myFile.println("Time,Lat,Long,Alt,HDOP,Inside0,Inside1,Outside0,Outside1,Pressure,Ozone,CO2,Temperature,Humidity");
     myFile.flush();
     myFile.close();
 #if debug
@@ -236,7 +239,9 @@ void loop() {
     // Format and write data to SD
     String timeStr = String(hours < 10 ? "0" : "") + String(hours) + ":" + String(minutes < 10 ? "0" : "") + String(minutes) + ":" + String(seconds < 10 ? "0" : "") + String(seconds);
 
-    String dataStr = timeStr + "," + String(latitude, 6) + "," + String(longitude, 6) + "," + String(altitude) + "," + String(hdop) + "," + String(insideCelsius) + "," + String(outsideCelsius) + "," + String(pressure) + "," + String(ozoneConcentration) + "," + String(co2Concentration) + "," + String(temperature) + "," + String(humidity);
+    String dataStr = timeStr + "," + String(latitude, 6) + "," + String(longitude, 6) + "," + String(altitude) + "," + String(hdop) + "," +   //gps
+    String(insideCelsius0) + "," + String(insideCelsius1) + "," + String(outsideCelsius0) + "," + String(outsideCelsius1) + "," +             //temps
+    String(pressure) + "," + String(ozoneConcentration) + "," + String(co2Concentration) + "," + String(temperature) + "," + String(humidity); //environmental
 
     myFile = SD.open(dataFile, FILE_WRITE);
     if (myFile) {
@@ -256,8 +261,11 @@ void loop() {
     temperature = NAN;
     humidity = NAN;
 #endif
-    insideCelsius = NAN;
-    outsideCelsius = NAN;
+    insideCelsius0 = NAN;
+    insideCelsius1 = NAN;
+    outsideCelsius0 = NAN;
+    outsideCelsius1 = NAN;
+
     ozoneConcentration = OZONE_STALE_VALUE;
   }
 }
