@@ -12,16 +12,22 @@
 TinyGPSPlus gps;
 
 #if enable_TempSensors
-#define INSIDE 5   //inside temp
-#define OUTSIDE 6  //outside temp
+#define INSIDE0 3   //inside temps
+#define INSIDE1 4
+#define OUTSIDE0 5  //outside temps
+#define OUTSIDE1 6
 
 // Setup a oneWire instance to communicate with any OneWire devices
-OneWire in(INSIDE);
-OneWire out(OUTSIDE);
+OneWire in0(INSIDE0);
+OneWire in1(INSIDE1);
+OneWire out0(OUTSIDE0);
+OneWire out1(OUTSIDE1);
 
 // Pass our oneWire reference to Dallas Temperature sensor
-DallasTemperature sensors_in(&in);
-DallasTemperature sensors_out(&out);
+DallasTemperature sensors_in0(&in0);
+DallasTemperature sensors_in1(&in1);
+DallasTemperature sensors_out0(&out0);
+DallasTemperature sensors_out1(&out1);
 #endif
 
 File myFile;
@@ -60,9 +66,11 @@ float outsideCelsius = 0.0;
 
 #define OZONE_STALE_VALUE INT16_MIN
 
-//calibrated empirically
-float insideOffset = -0.2;
-float outsideOffset = -1.0;
+//need to calibrate before launch/assembly
+float insideOffset0 = 0;
+float insideOffset1 = 0;
+float outsideOffset0 = 0;
+float outsideOffset1 = 0;
 
 double latitude = 0.0;
 double longitude = 0.0;
@@ -134,8 +142,10 @@ void setup() {
 
 // Start up the temperature sensors
 #if enable_TempSensors
-  sensors_in.begin();
-  sensors_out.begin();
+  sensors_in0.begin();
+  sensors_in1.begin();
+  sensors_out0.begin();
+  sensors_out1.begin();
 #endif
 
 #if enable_buzzer
@@ -184,7 +194,7 @@ void loop() {
 #if wokwi_test
   unsigned long process_time = 1000;
 #else
-  unsigned long process_time = 10000;
+  unsigned long process_time = 5000;
 #endif
   if (currentMillis - previousMillis >= process_time) {
     previousMillis = currentMillis;
@@ -204,10 +214,15 @@ void loop() {
 #endif
 
 #if enable_TempSensors
-    sensors_in.requestTemperatures();
-    insideCelsius = sensors_in.getTempCByIndex(0) + insideOffset;
-    sensors_out.requestTemperatures();
-    outsideCelsius = sensors_out.getTempCByIndex(0) + outsideOffset;
+    sensors_in0.requestTemperatures();
+    sensors_in1.requestTemperatures();
+    sensors_out0.requestTemperatures();
+    sensors_out1.requestTemperatures();
+
+    insideCelsius0 = sensors_in0.getTempCByIndex(0) + insideOffset0;
+    insideCelsius1 = sensors_in1.getTempCByIndex(0) + insideOffset1;
+    outsideCelsius0 = sensors_out0.getTempCByIndex(0) + outsideOffset0;
+    outsideCelsius1 = sensors_out1.getTempCByIndex(0) + outsideOffset1;
 #endif
 
 #if enable_buzzer
