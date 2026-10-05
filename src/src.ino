@@ -6,7 +6,6 @@
 #include <Wire.h>
 #include <MS5611.h>
 #include "DFRobot_OzoneSensor.h"
-#include <SensirionI2cScd30.h>
 #include "config.h"
 #include <math.h>
 TinyGPSPlus gps;
@@ -39,11 +38,6 @@ String dataFile = "data.csv";
 #define Ozone_IICAddress OZONE_ADDRESS_3
 #endif
 
-#if enable_Sensirion
-SensirionI2cScd30 sensor;
-#endif
-
-
 #if enable_Ozone
 DFRobot_OzoneSensor Ozone;
 #endif
@@ -54,10 +48,7 @@ MS5611 baro;
 
 float pressure = 0;
 int16_t ozoneConcentration = 0;
-float filtered = 0;
-float co2Concentration = 0;
-float temperature = 0;
-float humidity = 0;
+
 float insideCelsius0 = 0.0;
 float insideCelsius1 = 0.0;
 float outsideCelsius0 = 0.0;
@@ -108,7 +99,7 @@ void setup() {
   // Create/Open file
   myFile = SD.open(dataFile, FILE_WRITE);
   if (myFile) {
-    myFile.println("Time,Lat,Long,Alt,HDOP,Inside0,Inside1,Outside0,Outside1,Pressure,Ozone,CO2,Temperature,Humidity");
+    myFile.println("Time,Lat,Long,Alt,HDOP,Inside0,Inside1,Outside0,Outside1,Pressure,Ozone");
     myFile.flush();
     myFile.close();
 #if debug
@@ -149,11 +140,7 @@ void setup() {
 #endif
 
 
-#if enable_Sensirion
-  sensor.begin(Wire, SCD30_I2C_ADDR_61);
-  sensor.startPeriodicMeasurement(0);
-#endif
-}
+
 
 void loop() {
   // Process GPS data
@@ -206,10 +193,6 @@ void loop() {
     ozoneConcentration = Ozone.readOzoneData(COLLECT_NUMBER);
 #endif
 
-#if enable_Sensirion
-    sensor.blockingReadMeasurementData(co2Concentration, temperature, humidity);
-#endif
-
 #if enable_TempSensors
     sensors_in0.requestTemperatures();
     sensors_in1.requestTemperatures();
@@ -229,7 +212,7 @@ void loop() {
 
     String dataStr = timeStr + "," + String(latitude, 6) + "," + String(longitude, 6) + "," + String(altitude) + "," + String(hdop) + "," +   //gps
     String(insideCelsius0) + "," + String(insideCelsius1) + "," + String(outsideCelsius0) + "," + String(outsideCelsius1) + "," +             //temps
-    String(pressure) + "," + String(ozoneConcentration) + "," + String(co2Concentration) + "," + String(temperature) + "," + String(humidity); //environmental
+    String(pressure) + "," + String(ozoneConcentration); //environmental
 
     myFile = SD.open(dataFile, FILE_WRITE);
     if (myFile) {
@@ -244,10 +227,7 @@ void loop() {
 #endif
     }
     pressure = NAN;
-#if enable_Sensirion
-    co2Concentration = NAN;
-    temperature = NAN;
-    humidity = NAN;
+
 #endif
     insideCelsius0 = NAN;
     insideCelsius1 = NAN;
