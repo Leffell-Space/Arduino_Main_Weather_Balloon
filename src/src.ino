@@ -138,9 +138,7 @@ void setup() {
   sensors_out0.begin();
   sensors_out1.begin();
 #endif
-
-
-
+}
 
 void loop() {
   // Process GPS data
