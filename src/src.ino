@@ -228,7 +228,6 @@ void loop() {
     }
     pressure = NAN;
 
-#endif
     insideCelsius0 = NAN;
     insideCelsius1 = NAN;
     outsideCelsius0 = NAN;
