@@ -1,0 +1,118 @@
+// sketch_oct7a.ino
+// INA266 basic I2C example for Arduino
+
+#include <Wire.h>
+
+// Change this if your INA266 address is different (depends on A0/A1 pins)
+const uint8_t INA266_ADDR = 0x40;
+
+// INA226/INA266 register addresses
+const uint8_t REG_CONFIG       = 0x00;
+const uint8_t REG_SHUNT_VOLT   = 0x01;
+const uint8_t REG_BUS_VOLT     = 0x02;
+const uint8_t REG_POWER        = 0x03;
+const uint8_t REG_CURRENT      = 0x04;
+const uint8_t REG_CALIBRATION  = 0x05;
+
+// Calibration parameters (example values)
+const float SHUNT_RESISTANCE_OHMS = 0.01f;   // 10 mΩ example
+const float MAX_EXPECTED_CURRENT_A = 10.0f;  // 10 A example
+
+float current_LSB_A = 0.0f;   // Current LSB in Amps/bit
+float power_LSB_W   = 0.0f;   // Power LSB in Watts/bit
+
+void writeRegister16(uint8_t reg, uint16_t value) {
+  Wire.beginTransmission(INA266_ADDR);
+  Wire.write(reg);
+  Wire.write((uint8_t)(value >> 8));   // MSB
+  Wire.write((uint8_t)(value & 0xFF)); // LSB
+  Wire.endTransmission();
+}
+
+uint16_t readRegister16(uint8_t reg) {
+  Wire.beginTransmission(INA266_ADDR);
+  Wire.write(reg);
+  Wire.endTransmission(false); // repeated start
+
+  Wire.requestFrom(INA266_ADDR, (uint8_t)2);
+  if (Wire.available() < 2) {
+    return 0; // error case
+  }
+  uint16_t value = (Wire.read() << 8);
+  value |= Wire.read();
+  return value;
+}
+
+void configureINA266() {
+  // Example config: 32V range, ±81.92mV shunt, 12-bit conv, continuous mode
+  // Value 0x4FC7 is a common INA226 configuration and works similarly for INA266
+  uint16_t config = 0x4FC7;
+  writeRegister16(REG_CONFIG, config);
+}
+
+void calibrateINA266() {
+  // From datasheet:
+  // current_LSB = MaxExpectedCurrent / 2^15 (or nearby)
+  // calibrationRegister = 0.00512 / (current_LSB * Rshunt)
+
+  current_LSB_A = MAX_EXPECTED_CURRENT_A / 32768.0f;
+  float calibration = 0.00512f / (current_LSB_A * SHUNT_RESISTANCE_OHMS);
+  uint16_t calReg = (uint16_t)(calibration + 0.5f); // round
+
+  writeRegister16(REG_CALIBRATION, calReg);
+
+  power_LSB_W = 25.0f * current_LSB_A;
+}
+
+void setup() {
+  Serial.begin(115200);
+  while (!Serial) {
+    ; // wait for serial on some boards
+  }
+
+  Serial.println("Starting INA266 I2C example...");
+
+  Wire.begin(); // use default SDA/SCL for your board
+
+  configureINA266();
+  calibrateINA266();
+
+  Serial.println("INA266 configured.");
+  
+  Wire.beginTransmission(INA266_ADDR);
+byte error = Wire.endTransmission();
+Serial.print("I2C check, error = ");
+Serial.println(error);
+
+}
+
+void loop() {
+  // Read bus voltage
+  uint16_t rawBus = readRegister16(REG_BUS_VOLT);
+  float busVoltage_V = rawBus * 0.00125f;  // 1.25mV per bit
+
+  // Read shunt voltage
+  uint16_t rawShunt = readRegister16(REG_SHUNT_VOLT);
+  float shuntVoltage_V = (int16_t)rawShunt * 2.5e-6f; // 2.5µV per bit, signed
+
+  // Read current
+  uint16_t rawCurrent = readRegister16(REG_CURRENT);
+  float current_A = (int16_t)rawCurrent * current_LSB_A;
+
+  // Read power
+  uint16_t rawPower = readRegister16(REG_POWER);
+  float power_W = rawPower * power_LSB_W;
+
+  Serial.print("Bus: ");
+  Serial.print(busVoltage_V, 3);
+  Serial.print(" V  | Shunt: ");
+  Serial.print(shuntVoltage_V * 1000.0f, 3);
+  Serial.print(" mV  | Current: ");
+  Serial.print(current_A * 1000.0f, 2);
+  Serial.print(" mA  | Power: ");
+  Serial.print(power_W, 3);
+  Serial.println(" W");
+
+  delay(1000);
+}
+
